@@ -11,6 +11,96 @@ import {
   getDriveDownloadUrl 
 } from '../utils/googleDriveHelper';
 
+
+export function getChapterWorksheetOrPaperUrl(ch: Chapter, bookTitle?: string): string | null {
+  const titleUpper = (bookTitle || '').toUpperCase();
+  const id = ch.id.toLowerCase();
+  const num = ch.chapterNumber;
+
+  // Class 11 History Ch 1 Pages 11-12
+  if (id === 'c11-hist-ch1' || id.includes('kehs101') || (num === 1 && titleUpper.includes('HIST') && (titleUpper.includes('11') || titleUpper.includes('XI')))) {
+    return '/history-class11-ch1-writing-and-city-life-pages11-12-worksheet.html';
+  }
+  // Class 11 Accountancy Navyug Exam Solutions
+  if (id.includes('c11-acc') || id.includes('keac')) {
+    if (num === 3) return '/accountancy/accounting-equation-full-problems-notes-solutions.html';
+    if (num === 4) return '/financial-accounting-cash-book-numericals-studio.html';
+    if (num === 5) return '/financial-accounting-ch5-bank-reconciliation-statement-studio.html';
+    return '/navyug-class11-accountancy-exam-solutions.html';
+  }
+  // Class 11 Economics Printable Question Paper
+  if (id.includes('c11-eco') || id.includes('keec') || id.includes('kest')) {
+    if (id.includes('kest') || id.includes('stats')) return '/class11-statistics-ch1-ch2-ch3-numerical-test-paper.html';
+    return '/class11-economics-ch1-ch2-printable-question-paper.html';
+  }
+  // Class 11 Maths Permutations & Combinations
+  if ((id.includes('c11-m') || id.includes('kemh')) && num === 6) {
+    return '/class11-maths-permutations-combinations-ch6-difficult-questions.html';
+  }
+
+  // Class 5 Maths Ch 6 Dairy Farm Worksheet
+  if ((id.includes('c5-m') || id.includes('eemm106') || id.includes('eemh106')) || (num === 6 && (titleUpper.includes('CLASS 5') || titleUpper.includes('CLASS V')))) {
+    return '/maths-class5-ch6-dairy-farm-worksheet.html';
+  }
+  // Class 5 Santoor Ch 6 What a Tank Worksheet
+  if ((id.includes('c5-santoor') || id.includes('eesa106')) || (num === 6 && titleUpper.includes('SANTOOR'))) {
+    return '/santoor-class5-ch6-what-a-tank-worksheet.html';
+  }
+  // Class 4 Maths Ch 6 Measuring is Fun
+  if ((id.includes('c4-m') || id.includes('demm106')) || (num === 6 && titleUpper.includes('CLASS 4'))) {
+    return '/maths-class4-ch6-measuring-fun-worksheet.html';
+  }
+  // Class 3 Maths Ch 6 House of Hundreds
+  if ((id.includes('c3-m') || id.includes('cemm106')) || (num === 6 && titleUpper.includes('CLASS 3'))) {
+    return '/maths-class3-ch6-house-of-hundreds-worksheet.html';
+  }
+  // Class 2 Maths Ch 6 Festival Decoration
+  if ((id.includes('c2-m') || id.includes('bcmm106')) || (num === 6 && titleUpper.includes('CLASS 2'))) {
+    return '/maths-class2-ch6-festival-decoration-worksheet.html';
+  }
+
+  // Class 7 Science Ch 6 Adolescence Worksheet
+  if ((id.includes('c7-sci') || id.includes('gecu106')) && num === 6) {
+    return '/curiosity-class7-ch6-adolescence-worksheet.html';
+  }
+  // Class 7 Maths Ch 6 Number Play
+  if ((id.includes('c7-mat') || id.includes('gegp106')) && num === 6) {
+    return '/ganita-class7-ch6-number-play-mcq.html';
+  }
+  // Class 7 English Poorvi Unit 1 Learning Together
+  if ((id.includes('c7-eng') || id.includes('gepr101')) && num === 1) {
+    return '/english-class7-poorvi-unit1-learning-together-mcq.html';
+  }
+
+  // Class 9 Science Motion and Force
+  if ((id.includes('c9-s') || id.includes('iesc106') || id.includes('iesc107')) && (num === 6 || num === 7)) {
+    return '/class9-science-motion-force-test-hindi.html';
+  }
+  // Class 9 Maths 40-marks
+  if ((id.includes('c9-m') || id.includes('iemh')) && (num === 4 || num === 5)) {
+    return '/class9-maths-ch4-ch5-question-paper-40-marks.html';
+  }
+  // Class 9 Hindi Grammar Masterclass
+  if (id.includes('c9-hg') || id.includes('grammar')) {
+    return '/hindi-class9-grammar-complete-mastery.html';
+  }
+
+  // Class 12 Chemistry Ch 1 Haloalkanes
+  if ((id.includes('c12-chem') || id.includes('lech201')) && (num === 1 || num === 6)) {
+    return '/class12-chemistry-ch1-haloalkanes-board-test-paper.html';
+  }
+  // Class 12 Physics Ch 1 Derivations
+  if ((id.includes('c12-p') || id.includes('leph101')) && num === 1) {
+    return '/physics-class12-ch1-all-derivations-studio.html?class=12&subject=c12-physics&book=part-1';
+  }
+  // Class 12 Physics Ch 2 Derivations
+  if ((id.includes('c12-p') || id.includes('leph102')) && num === 2) {
+    return '/physics-class12-ch2-all-derivations-studio.html?class=12&subject=c12-physics&book=part-1';
+  }
+
+  return null;
+}
+
 export function getOfficialNcertPdfUrl(ch: Chapter, bookTitle?: string): string {
   const titleUpper = (bookTitle || '').toUpperCase();
   const isExemplar = titleUpper.includes('EXEMPLAR');
@@ -143,7 +233,7 @@ export const BookChaptersView: React.FC<BookChaptersViewProps> = ({
     return saved ? JSON.parse(saved) : [];
   });
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'chapters' | 'artwork'>('chapters');
+  
 
   const handleDownloadOffline = async (ch: Chapter) => {
     setDownloadingId(ch.id);
@@ -206,6 +296,15 @@ export const BookChaptersView: React.FC<BookChaptersViewProps> = ({
 
   const prelimsPdfUrl = `https://ncert.nic.in/textbook/pdf/${activeBookCode}ps.pdf`;
   const officialPortalUrl = `https://ncert.nic.in/textbook.php?${activeBookCode}=0-${chapters.length}`;
+  
+  const isPrimaryKidMode = (() => {
+    const t = (bookTitle || '').toUpperCase();
+    return chapters.some(c => c.id.startsWith('c1-') || c.id.startsWith('c2-') || c.id.startsWith('c3-') || c.id.startsWith('c4-') || c.id.startsWith('c5-')) ||
+      t.includes('(I)') || t.includes('(II)') || t.includes('(III)') || t.includes('(IV)') || t.includes('(V)') ||
+      t.includes('CLASS 1') || t.includes('CLASS 2') || t.includes('CLASS 3') || t.includes('CLASS 4') || t.includes('CLASS 5') ||
+      t.includes('MRIDANG') || t.includes('SARANGI') || t.includes('JOYFUL') || t.includes('SANTOOR') || t.includes('VEENA') || t.includes('MATHS MELA') || t.includes('WONDROUS');
+  })();
+
   const coverUrl = activeBookCode ? `https://ncert.nic.in/textbook/pdf/${activeBookCode}cc.jpg` : null;
 
   return (
@@ -384,177 +483,11 @@ export const BookChaptersView: React.FC<BookChaptersViewProps> = ({
         </button>
       </div>
 
-      {/* View Switcher: Chapters vs Artwork & Covers */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        marginBottom: '1rem',
-        padding: '4px',
-        background: 'rgba(255, 255, 255, 0.04)',
-        border: '1px solid var(--border-color)',
-        borderRadius: '12px'
-      }}>
-        <button
-          type="button"
-          onClick={() => setActiveTab('chapters')}
-          style={{
-            flex: 1,
-            padding: '8px 12px',
-            borderRadius: '9px',
-            border: 'none',
-            cursor: 'pointer',
-            fontWeight: 800,
-            fontSize: '0.82rem',
-            transition: 'all 0.2s ease',
-            background: activeTab === 'chapters' ? '#4f46e5' : 'transparent',
-            color: activeTab === 'chapters' ? '#ffffff' : 'var(--text-muted)'
-          }}
-        >
-          📚 Chapter PDFs ({chapters.length})
-        </button>
-
-        <button
-          type="button"
-          onClick={() => setActiveTab('artwork')}
-          style={{
-            flex: 1,
-            padding: '8px 12px',
-            borderRadius: '9px',
-            border: 'none',
-            cursor: 'pointer',
-            fontWeight: 800,
-            fontSize: '0.82rem',
-            transition: 'all 0.2s ease',
-            background: activeTab === 'artwork' ? '#14b8a6' : 'transparent',
-            color: activeTab === 'artwork' ? '#ffffff' : 'var(--text-muted)'
-          }}
-        >
-          🖼️ Drive Artwork &amp; Covers (2)
-        </button>
-      </div>
-
-      {activeTab === 'artwork' ? (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '14px', marginBottom: '2rem' }}>
-          {/* Card 1: Math Mela Cover */}
-          <div className="glass-card" style={{
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border-color)',
-            borderRadius: '14px',
-            padding: '16px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            textAlign: 'center',
-            gap: '12px'
-          }}>
-            <img
-              src="https://ncert.nic.in/textbook/pdf/eemm1cc.jpg"
-              alt="Class 5 Maths Mela Book Cover"
-              style={{
-                width: '120px',
-                height: '165px',
-                objectFit: 'cover',
-                borderRadius: '8px',
-                boxShadow: '0 8px 20px rgba(0,0,0,0.35)',
-                border: '2px solid rgba(255,255,255,0.2)'
-              }}
-            />
-            <div>
-              <div style={{ fontWeight: 900, fontSize: '0.95rem', color: 'var(--text-primary)' }}>
-                Maths Mela (गणित मेला)
-              </div>
-              <div style={{ fontSize: '0.74rem', color: '#14b8a6', fontWeight: 800, marginTop: '2px' }}>
-                NEP 2024 Edition • Code: eemm1
-              </div>
-              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: '6px 0 0' }}>
-                Official National Curriculum Framework textbook cover artwork from Google Drive cloud repository.
-              </p>
-            </div>
-            <div style={{ display: 'flex', gap: '8px', width: '100%', marginTop: 'auto' }}>
-              <a
-                href="https://ncert.nic.in/textbook/pdf/eemm1cc.jpg"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-outline"
-                style={{ flex: 1, fontSize: '0.75rem', padding: '7px 8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
-              >
-                <Eye size={13} /> High-Res
-              </a>
-              <a
-                href={SHARED_NCERT_DRIVE_FOLDER_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn"
-                style={{ flex: 1, fontSize: '0.75rem', padding: '7px 8px', background: 'rgba(20, 184, 166, 0.15)', border: '1px solid #14b8a6', color: '#14b8a6', fontWeight: 800, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
-              >
-                <FolderOpen size={13} /> In Drive ↗
-              </a>
-            </div>
-          </div>
-
-          {/* Card 2: Math-Magic Classic Cover */}
-          <div className="glass-card" style={{
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border-color)',
-            borderRadius: '14px',
-            padding: '16px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            textAlign: 'center',
-            gap: '12px'
-          }}>
-            <img
-              src="https://ncert.nic.in/textbook/pdf/eemh1cc.jpg"
-              alt="Class 5 Math-Magic Classic Book Cover"
-              style={{
-                width: '120px',
-                height: '165px',
-                objectFit: 'cover',
-                borderRadius: '8px',
-                boxShadow: '0 8px 20px rgba(0,0,0,0.35)',
-                border: '2px solid rgba(255,255,255,0.2)'
-              }}
-            />
-            <div>
-              <div style={{ fontWeight: 900, fontSize: '0.95rem', color: 'var(--text-primary)' }}>
-                Math-Magic (गणित का जादू)
-              </div>
-              <div style={{ fontSize: '0.74rem', color: '#38bdf8', fontWeight: 800, marginTop: '2px' }}>
-                Classic NCERT Edition • Code: eemh1
-              </div>
-              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', margin: '6px 0 0' }}>
-                Classic NCERT mathematics textbook cover artwork preserved in Google Drive cloud vault.
-              </p>
-            </div>
-            <div style={{ display: 'flex', gap: '8px', width: '100%', marginTop: 'auto' }}>
-              <a
-                href="https://ncert.nic.in/textbook/pdf/eemh1cc.jpg"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-outline"
-                style={{ flex: 1, fontSize: '0.75rem', padding: '7px 8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
-              >
-                <Eye size={13} /> High-Res
-              </a>
-              <a
-                href={SHARED_NCERT_DRIVE_FOLDER_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn"
-                style={{ flex: 1, fontSize: '0.75rem', padding: '7px 8px', background: 'rgba(20, 184, 166, 0.15)', border: '1px solid #14b8a6', color: '#14b8a6', fontWeight: 800, textDecoration: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
-              >
-                <FolderOpen size={13} /> In Drive ↗
-              </a>
-            </div>
-          </div>
-        </div>
-      ) : (
         /* Chapters Rows List */
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '2rem' }}>
           {chapters.map((ch) => {
-          const pdfUrl = getOfficialNcertPdfUrl(ch, bookTitle);
+          const _pdfUrl = getOfficialNcertPdfUrl(ch, bookTitle);
+          void _pdfUrl;
           const isBookmarked = isChapterBookmarked ? isChapterBookmarked(ch.id) : false;
           const titleUpper = (bookTitle || '').toUpperCase();
           const isPhysics = titleUpper.includes('PHYSIC') || ch.id.includes('-p-') || ch.id.includes('leph');
@@ -619,7 +552,15 @@ export const BookChaptersView: React.FC<BookChaptersViewProps> = ({
           const isScience9Ch7 = ch.id === 'c9-s-ch7' || ch.id.includes('iesc107') || (ch.officialBookCode === 'iesc1' && ch.chapterNumber === 7) || (isScience && ch.chapterNumber === 7 && (titleUpper.includes('9') || titleUpper.includes('IX'))) || ch.title.toLowerCase() === 'motion';
           const isCuriosity7Ch9 = ch.id === 'c7-sci-ch9' || ch.id.includes('gecu109') || (ch.officialBookCode === 'gecu1' && ch.chapterNumber === 9) || (isScience && (titleUpper.includes('7') || titleUpper.includes('VII') || titleUpper.includes('CURIOSITY')) && ch.chapterNumber === 9);
           const isCuriosity7Ch7 = ch.id === 'c7-sci-ch7' || ch.id.includes('gecu107') || (ch.officialBookCode === 'gecu1' && ch.chapterNumber === 7) || ch.title.toLowerCase().includes('heat transfer');
-          const isClass1 = ch.id.startsWith('c1-') || ch.officialBookCode === 'aemr1' || ch.officialBookCode === 'aejm1' || ch.officialBookCode === 'ahsr1' || titleUpper.includes('CLASS 1') || titleUpper.includes('CLASS I') || titleUpper.includes('MRIDANG') || titleUpper.includes('SARANGI') || titleUpper.includes('JOYFUL');
+          // Stage & Class Detection for Action Deck (Class 1 to 5: Worksheet, Class 6 to 12: Sample Paper)
+          const isPrimaryStage = 
+            ch.id.startsWith('c1-') || ch.id.startsWith('c2-') || ch.id.startsWith('c3-') || ch.id.startsWith('c4-') || ch.id.startsWith('c5-') ||
+            titleUpper.includes('(I)') || titleUpper.includes('(II)') || titleUpper.includes('(III)') || titleUpper.includes('(IV)') || titleUpper.includes('(V)') ||
+            titleUpper.includes('CLASS 1') || titleUpper.includes('CLASS 2') || titleUpper.includes('CLASS 3') || titleUpper.includes('CLASS 4') || titleUpper.includes('CLASS 5') ||
+            titleUpper.includes('MRIDANG') || titleUpper.includes('SARANGI') || titleUpper.includes('JOYFUL') || titleUpper.includes('SANTOOR') || titleUpper.includes('VEENA') || titleUpper.includes('MATHS MELA') || titleUpper.includes('WONDROUS');
+
+          const thirdActionLabel = isPrimaryStage ? 'Worksheet' : 'Sample Paper';
+          const thirdActionTitle = isPrimaryStage ? 'Open Practice Worksheet & Exercises' : 'Open Sample Paper & Model Questions';
 
           // Extract unit information if present in title for Class 1
           const unitMatch = ch.title.match(/\((Unit\s*\d+[^)]*|इकाई\s*\d+[^)]*)\)/i);
@@ -660,26 +601,34 @@ export const BookChaptersView: React.FC<BookChaptersViewProps> = ({
                 }
               `}</style>
 
-              {isClass1 ? (
-                /* Class 1 Specialized Layout: Unit Name, Animated Bookmark & 3 Action Buttons */
-                <div>
-                  <div style={{ fontWeight: 800, fontSize: '0.98rem', color: 'var(--text-primary)', marginBottom: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-                    <span style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, minWidth: 0 }}>
-                      <span style={{
-                        fontSize: '0.72rem',
-                        fontWeight: 800,
-                        color: 'var(--accent-primary, #4f46e5)',
-                        letterSpacing: '0.04em',
-                        textTransform: 'uppercase',
-                        background: 'rgba(79, 70, 229, 0.1)',
-                        padding: '2px 8px',
-                        borderRadius: '6px',
-                        display: 'inline-block',
-                        width: 'fit-content'
-                      }}>
-                        {unitBadgeText}
-                      </span>
-                      <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)', wordBreak: 'break-word' }}>
+              <div>
+                  <div style={{ fontWeight: 800, fontSize: isPrimaryKidMode ? '1.14rem' : '0.98rem', color: 'var(--text-primary)', marginBottom: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                    <span style={{ display: 'flex', flexDirection: 'column', gap: isPrimaryKidMode ? '6px' : '4px', flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        {isPrimaryKidMode && (
+                          <img
+                            src="/dudu-bubu-reading.png"
+                            alt="Reading Buddy"
+                            style={{ width: '22px', height: '16px', objectFit: 'contain' }}
+                          />
+                        )}
+                        <span style={{
+                          fontSize: isPrimaryKidMode ? '0.78rem' : '0.72rem',
+                          fontWeight: 900,
+                          color: isPrimaryKidMode ? '#d97706' : 'var(--accent-primary, #4f46e5)',
+                          letterSpacing: '0.04em',
+                          textTransform: 'uppercase',
+                          background: isPrimaryKidMode ? 'rgba(245, 158, 11, 0.15)' : 'rgba(79, 70, 229, 0.1)',
+                          border: isPrimaryKidMode ? '1px solid rgba(245, 158, 11, 0.35)' : 'none',
+                          padding: '3px 10px',
+                          borderRadius: '8px',
+                          display: 'inline-block',
+                          width: 'fit-content'
+                        }}>
+                          {unitBadgeText}
+                        </span>
+                      </div>
+                      <span style={{ fontSize: isPrimaryKidMode ? '1.14rem' : '1rem', fontWeight: 900, color: 'var(--text-primary)', wordBreak: 'break-word', letterSpacing: isPrimaryKidMode ? '-0.01em' : 'normal' }}>
                         {displayTitleText}
                       </span>
                     </span>
@@ -714,7 +663,7 @@ export const BookChaptersView: React.FC<BookChaptersViewProps> = ({
                     )}
                   </div>
 
-                  {/* 3 Action Buttons below: Download, Online, and Worksheet */}
+                  {/* 3 Action Buttons below: [Saved/Download], [Online/View], and [Worksheet (1-5) / Sample Paper (6-12)] */}
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
                     {downloadedIds.includes(ch.id) ? (
                       <button
@@ -751,32 +700,43 @@ export const BookChaptersView: React.FC<BookChaptersViewProps> = ({
                       </button>
                     )}
 
-                    <a
-                      href={pdfUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (onOpenPdfReader) onOpenPdfReader(ch);
+                      }}
                       className="btn btn-outline"
+                      title="Read Chapter Online (In-App)"
                       style={{
                         padding: '8px 8px',
                         fontSize: '0.78rem',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        gap: '5px'
+                        gap: '5px',
+                        cursor: 'pointer'
                       }}
                     >
                       <Eye size={14} /> <span>Online</span>
-                    </a>
+                    </button>
 
                     <button
+                      type="button"
                       onClick={() => {
-                        if (onOpenPdfReader) onOpenPdfReader(ch);
+                        const targetUrl = getChapterWorksheetOrPaperUrl(ch, bookTitle);
+                        if (targetUrl) {
+                          window.location.href = targetUrl;
+                        } else if (onOpenPdfReader) {
+                          onOpenPdfReader(ch);
+                        }
                       }}
                       className="btn"
                       style={{
-                        background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%)',
-                        border: '1px solid #10b981',
-                        color: '#10b981',
+                        background: isPrimaryStage 
+                          ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%)'
+                          : 'linear-gradient(135deg, rgba(245, 158, 11, 0.16) 0%, rgba(217, 119, 6, 0.1) 100%)',
+                        border: isPrimaryStage ? '1px solid #10b981' : '1px solid #f59e0b',
+                        color: isPrimaryStage ? '#10b981' : '#f59e0b',
                         padding: '8px 8px',
                         fontWeight: 800,
                         fontSize: '0.78rem',
@@ -787,121 +747,12 @@ export const BookChaptersView: React.FC<BookChaptersViewProps> = ({
                         gap: '5px',
                         borderRadius: '8px'
                       }}
-                      title="Open Practice Worksheet & Exercises"
+                      title={thirdActionTitle}
                     >
-                      <FileText size={14} /> <span>Worksheet</span>
+                      <FileText size={14} /> <span>{thirdActionLabel}</span>
                     </button>
                   </div>
                 </div>
-              ) : (
-                /* Standard layout for other classes */
-                <div>
-                  <div style={{ fontWeight: 800, fontSize: '0.98rem', color: 'var(--text-primary)', marginBottom: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                      <span style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--accent-primary)', letterSpacing: '0.03em', textTransform: 'uppercase' }}>अध्याय {ch.chapterNumber}</span>
-                      <span>{ch.title.replace(/^अध्याय\s*\d+[:\s]+/, '').replace(/^Chapter\s*\d+[:\s]+/i, '')}</span>
-                    </span>
-                    {onToggleBookmarkChapter && (
-                      <button
-                        onClick={() => onToggleBookmarkChapter(ch)}
-                        style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: '4px' }}
-                        title={isBookmarked ? "Remove Bookmark" : "Bookmark Chapter"}
-                      >
-                        <Bookmark size={18} style={{ color: isBookmarked ? '#4f46e5' : 'var(--text-muted)' }} fill={isBookmarked ? '#4f46e5' : 'none'} />
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Action Buttons: 1. Download from Google Drive, 2. Google Drive Cloud Link, 3. Online */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
-                    {downloadedIds.includes(ch.id) ? (
-                      <button
-                        onClick={() => {
-                          if (onOpenPdfReader) {
-                            onOpenPdfReader(ch);
-                          }
-                        }}
-                        className="btn btn-primary"
-                        title="Downloaded for Offline Viewing"
-                        style={{
-                          padding: '8px 10px',
-                          fontSize: '0.8rem',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '5px'
-                        }}
-                      >
-                        <HardDriveDownload size={14} /> <span>Saved</span>
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => handleDownloadOffline(ch)}
-                        disabled={downloadingId === ch.id}
-                        className="btn"
-                        style={{
-                          background: 'linear-gradient(135deg, rgba(20, 184, 166, 0.18) 0%, rgba(16, 185, 129, 0.08) 100%)',
-                          border: '1.5px solid #14b8a6',
-                          color: '#14b8a6',
-                          padding: '8px 10px',
-                          fontWeight: 800,
-                          fontSize: '0.8rem',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '5px',
-                          opacity: downloadingId === ch.id ? 0.7 : 1
-                        }}
-                        title="Download Chapter PDF from Google Drive (newncert.nextsem@gmail.com)"
-                      >
-                        <Download size={14} /> <span>{downloadingId === ch.id ? 'Saving...' : 'Drive PDF'}</span>
-                      </button>
-                    )}
-
-                    <a
-                      href={ch.googleDriveFileId ? `https://drive.google.com/file/d/${ch.googleDriveFileId}/view` : SHARED_NCERT_DRIVE_FOLDER_URL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn"
-                      style={{
-                        background: 'rgba(255, 255, 255, 0.06)',
-                        border: '1px solid var(--border-color)',
-                        color: 'var(--text-main, var(--text-primary))',
-                        padding: '8px 10px',
-                        fontWeight: 800,
-                        fontSize: '0.8rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '5px',
-                        textDecoration: 'none'
-                      }}
-                      title="Direct Google Drive Folder Access (newncert.nextsem@gmail.com)"
-                    >
-                      <FolderOpen size={14} style={{ color: '#14b8a6' }} /> <span>Drive</span>
-                    </a>
-
-                    <a
-                      href={pdfUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn btn-outline"
-                      style={{
-                        padding: '8px 10px',
-                        fontSize: '0.8rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '5px'
-                      }}
-                      title="Read on official NCERT CDN"
-                    >
-                      <Eye size={14} /> <span>Online</span>
-                    </a>
-                  </div>
-                </div>
-              )}
 
               {/* 🌟 Interactive Action Deck: Notes, Quizzes, Fill-ups & Labs */}
               {/* Class 9 Hindi Grammar Masterclass Studio */}
@@ -3449,7 +3300,6 @@ export const BookChaptersView: React.FC<BookChaptersViewProps> = ({
           );
         })}
       </div>
-      )}
 
     </div>
   );

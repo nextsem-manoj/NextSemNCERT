@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">StudyGuide by Nextsem</string>
+    <string name="title_activity_main">StudyGuide by Nextsem</string>
+    <string name="package_name">online.nextsem.ncert</string>
+    <string name="custom_url_scheme">online.nextsem.ncert</string>
+</resources>

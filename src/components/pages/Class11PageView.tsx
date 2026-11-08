@@ -179,8 +179,44 @@ export const Class11PageView: React.FC<Class11PageViewProps> = ({
         </div>
       </div>
 
-      {/* Hero Showcase Card */}
-      <div style={{
+      {/* Compact Mobile Bar (Visible only on mobile screen <= 768px) */}
+      <div className="hub-hero-mobile-compact" style={{
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.12) 0%, rgba(139, 92, 246, 0.08) 100%)',
+        border: '1px solid rgba(59, 130, 246, 0.25)',
+        borderRadius: '14px',
+        padding: '10px 14px',
+        marginBottom: '14px',
+        gap: '10px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{
+            width: '32px',
+            height: '32px',
+            borderRadius: '8px',
+            background: 'rgba(59, 130, 246, 0.2)',
+            color: '#3b82f6',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0
+          }}>
+            <GraduationCap size={18} />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.94rem', fontWeight: 900, color: 'var(--text-primary)', lineHeight: 1.2 }}>
+              Class 11 Textbooks &amp; Solutions
+            </div>
+            <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#3b82f6' }}>
+              NEP 2026-27 • Commerce, Science &amp; Arts
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Hero Showcase Card (Desktop only > 768px) */}
+      <div className="hub-hero-desktop" style={{
         background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.12) 0%, rgba(139, 92, 246, 0.08) 50%, rgba(4, 170, 109, 0.08) 100%)',
         border: '1px solid rgba(59, 130, 246, 0.25)',
         borderRadius: '24px',
@@ -233,85 +269,6 @@ export const Class11PageView: React.FC<Class11PageViewProps> = ({
                 <Sparkles size={15} className="text-rose-500" />
                 Interactive Solutions
               </div>
-            </div>
-          </div>
-
-          {/* Quick Direct Actions Box */}
-          <div style={{
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border-color)',
-            borderRadius: '16px',
-            padding: '16px',
-            minWidth: '270px',
-            boxShadow: 'var(--shadow-sm)'
-          }}>
-            <div style={{ fontSize: '0.76rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-muted)', marginBottom: '10px' }}>
-              ⚡ Featured Class 11 Studios
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <a
-                href="/ts-grewal-class11.html"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '9px 12px',
-                  background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
-                  color: '#ffffff',
-                  textDecoration: 'none',
-                  borderRadius: '10px',
-                  fontSize: '0.82rem',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  boxShadow: '0 4px 12px rgba(37, 99, 235, 0.35)'
-                }}
-              >
-                <span>📊 T.S. Grewal Accountancy Studio</span>
-                <ChevronRight size={16} />
-              </a>
-
-              <a
-                href="/class11-economics-ch1-ch2-printable-question-paper.html"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '9px 12px',
-                  background: 'var(--bg-card-hover)',
-                  color: 'var(--text-primary)',
-                  textDecoration: 'none',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: '10px',
-                  fontSize: '0.82rem',
-                  fontWeight: 700,
-                  textAlign: 'left'
-                }}
-              >
-                <span>📝 Economics Exam Paper Suite</span>
-                <ChevronRight size={16} />
-              </a>
-
-              <a
-                href="/class11-maths-permutations-combinations-ch6-difficult-questions.html"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '9px 12px',
-                  background: 'var(--bg-card-hover)',
-                  color: 'var(--text-primary)',
-                  textDecoration: 'none',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: '10px',
-                  fontSize: '0.82rem',
-                  fontWeight: 700,
-                  textAlign: 'left'
-                }}
-              >
-                <span>📐 Permutations &amp; Combinations</span>
-                <ChevronRight size={16} />
-              </a>
             </div>
           </div>
         </div>
@@ -460,16 +417,28 @@ export const Class11PageView: React.FC<Class11PageViewProps> = ({
                 }}
               >
                 <div style={{ display: 'flex', gap: '14px', alignItems: 'flex-start' }}>
-                  <div style={{
-                    width: '90px',
-                    height: '125px',
-                    borderRadius: '8px',
-                    overflow: 'hidden',
-                    flexShrink: 0,
-                    background: '#000000',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)'
-                  }}>
+                  <div
+                    onClick={() => onSelectSubject(subj, getSubjectSlug(subj.id))}
+                    title={`Open ${subj.name}`}
+                    style={{
+                      width: '90px',
+                      height: '125px',
+                      borderRadius: '8px',
+                      overflow: 'hidden',
+                      flexShrink: 0,
+                      background: '#000000',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.4)',
+                      cursor: 'pointer',
+                      transition: 'transform 0.15s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.03)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  >
                     <img
                       src={coverImg}
                       alt={subj.name}
@@ -586,6 +555,75 @@ export const Class11PageView: React.FC<Class11PageViewProps> = ({
                     <span>NCERT</span>
                   </a>
                 </div>
+
+                {/* Subject-Specific Studio/Paper Link (Placed directly under its subject per L36) */}
+                {subj.id.includes('accountancy') ? (
+                  <div style={{ marginTop: '10px' }}>
+                    <a
+                      href="/ts-grewal-class11.html"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '8px 12px',
+                        background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.16) 0%, rgba(29, 78, 216, 0.08) 100%)',
+                        color: '#60a5fa',
+                        border: '1px solid rgba(59, 130, 246, 0.35)',
+                        textDecoration: 'none',
+                        borderRadius: '9px',
+                        fontSize: '0.78rem',
+                        fontWeight: 800
+                      }}
+                    >
+                      <span>📊 T.S. Grewal Accountancy Studio</span>
+                      <ChevronRight size={14} />
+                    </a>
+                  </div>
+                ) : (subj.id.includes('economic') || subj.id.includes('stats')) ? (
+                  <div style={{ marginTop: '10px' }}>
+                    <a
+                      href="/class11-economics-ch1-ch2-printable-question-paper.html"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '8px 12px',
+                        background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.14) 0%, rgba(5, 150, 105, 0.08) 100%)',
+                        color: '#34d399',
+                        border: '1px solid rgba(16, 185, 129, 0.35)',
+                        textDecoration: 'none',
+                        borderRadius: '9px',
+                        fontSize: '0.78rem',
+                        fontWeight: 800
+                      }}
+                    >
+                      <span>📝 Economics Exam Paper Suite</span>
+                      <ChevronRight size={14} />
+                    </a>
+                  </div>
+                ) : subj.id.includes('math') ? (
+                  <div style={{ marginTop: '10px' }}>
+                    <a
+                      href="/class11-maths-permutations-combinations-ch6-difficult-questions.html"
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '8px 12px',
+                        background: 'linear-gradient(135deg, rgba(245, 158, 11, 0.14) 0%, rgba(217, 119, 6, 0.08) 100%)',
+                        color: '#fbbf24',
+                        border: '1px solid rgba(245, 158, 11, 0.35)',
+                        textDecoration: 'none',
+                        borderRadius: '9px',
+                        fontSize: '0.78rem',
+                        fontWeight: 800
+                      }}
+                    >
+                      <span>📐 Permutations &amp; Combinations</span>
+                      <ChevronRight size={14} />
+                    </a>
+                  </div>
+                ) : null}
               </div>
             );
           })}

@@ -1,0 +1,880 @@
+export const getBookParts = (subjId: string) => {
+    if (subjId === 'c12-maths' || subjId === 'c12-physics' || subjId === 'c12-chemistry') {
+      return [
+        {
+          id: 'part-1',
+          title: `${subject.name.toUpperCase()} PART-I (XII)`,
+          bookCode: 'part-1',
+          coverBg: 'linear-gradient(135deg, #0284c7 0%, #1e3a8a 100%)',
+          textColor: '#ffffff',
+          tag: 'Part I • NCERT Textbook'
+        },
+        {
+          id: 'part-2',
+          title: `${subject.name.toUpperCase()} PART-II (XII)`,
+          bookCode: 'part-2',
+          coverBg: 'linear-gradient(135deg, #6366f1 0%, #312e81 100%)',
+          textColor: '#ffffff',
+          tag: 'Part II • NCERT Textbook'
+        },
+        {
+          id: 'exemplar',
+          title: `${subject.name.toUpperCase()} EXEMPLAR (XII)`,
+          bookCode: 'exemplar',
+          coverBg: 'linear-gradient(135deg, #d97706 0%, #78350f 100%)',
+          textColor: '#ffffff',
+          tag: 'Exemplar • NCERT Problems'
+        }
+      ];
+    }
+
+    if (subjId === 'c12-english') {
+      return [
+        {
+          id: 'part-1',
+          title: `FLAMINGO (TEXTBOOK)`,
+          bookCode: 'flamingo',
+          coverBg: 'linear-gradient(135deg, #e11d48 0%, #881337 100%)',
+          textColor: '#ffffff',
+          tag: 'Flamingo • NCERT lefl1'
+        },
+        {
+          id: 'part-2',
+          title: `VISTAS (SUPPLEMENTARY)`,
+          bookCode: 'vistas',
+          coverBg: 'linear-gradient(135deg, #0284c7 0%, #0c4a6e 100%)',
+          textColor: '#ffffff',
+          tag: 'Vistas • NCERT levt1'
+        },
+        {
+          id: 'part-3',
+          title: `KALEIDOSCOPE (ELECTIVE)`,
+          bookCode: 'kaleidoscope',
+          coverBg: 'linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%)',
+          textColor: '#ffffff',
+          tag: 'Kaleidoscope • NCERT lekl1'
+        }
+      ];
+    }
+
+    if (subjId === 'c11-accountancy') {
+      return [
+        {
+          id: 'part-1',
+          title: `FINANCIAL ACCOUNTING - I (XI)`,
+          bookCode: 'part-1',
+          coverBg: 'linear-gradient(135deg, #4f46e5 0%, #1e1b4b 100%)',
+          textColor: '#ffffff',
+          tag: 'Part I • NCERT keac1=0-7 (Ch 1–7)'
+        },
+        {
+          id: 'part-2',
+          title: `FINANCIAL ACCOUNTING - II (XI)`,
+          bookCode: 'part-2',
+          coverBg: 'linear-gradient(135deg, #0284c7 0%, #082f49 100%)',
+          textColor: '#ffffff',
+          tag: 'Part II • NCERT keac2=0-4 (Ch 8–11)'
+        },
+        {
+          id: 'ts-grewal',
+          title: `T.S. GREWAL: DOUBLE ENTRY BOOK KEEPING (XI)`,
+          bookCode: 'ts-grewal',
+          coverBg: 'linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%)',
+          textColor: '#ffffff',
+          tag: 'T.S. Grewal • Financial Accounting (18 Chapters & Solutions)'
+        },
+        {
+          id: 'navyug-midterm-paper',
+          title: `NAVYUG SCHOOL MID-TERM EXAM 2026 (80 MARKS)`,
+          bookCode: 'navyug-midterm',
+          coverBg: 'linear-gradient(135deg, #f59e0b 0%, #b45309 100%)',
+          textColor: '#ffffff',
+          tag: 'Mid-Term Exam (80 Marks) • 13 Solved Questions with Hidden Steps'
+        }
+      ];
+    }
+
+    if (subjId === 'c12-accountancy') {
+      return [
+        {
+          id: 'part-1',
+          title: `ACCOUNTANCY PART-I (XII)`,
+          bookCode: 'part-1',
+          coverBg: 'linear-gradient(135deg, #4f46e5 0%, #1e1b4b 100%)',
+          textColor: '#ffffff',
+          tag: 'Part I • Partnership Accounts (leac1=0-4)'
+        },
+        {
+          id: 'part-2',
+          title: `ACCOUNTANCY PART-II (XII)`,
+          bookCode: 'part-2',
+          coverBg: 'linear-gradient(135deg, #0284c7 0%, #082f49 100%)',
+          textColor: '#ffffff',
+          tag: 'Part II • Company Accounts (leac2=0-6)'
+        }
+      ];
+    }
+
+    if (subjId === 'c12-history') {
+      return [
+        {
+          id: 'part-1',
+          title: `THEMES IN INDIAN HISTORY PART-I (XII)`,
+          bookCode: 'part-1',
+          coverBg: 'linear-gradient(135deg, #b45309 0%, #78350f 100%)',
+          textColor: '#ffffff',
+          tag: 'Part I • NCERT lehs1 / lhhs1 (Themes 1–4)'
+        },
+        {
+          id: 'part-2',
+          title: `THEMES IN INDIAN HISTORY PART-II (XII)`,
+          bookCode: 'part-2',
+          coverBg: 'linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%)',
+          textColor: '#ffffff',
+          tag: 'Part II • NCERT lehs2 / lhhs2 (Themes 5–8)'
+        },
+        {
+          id: 'part-3',
+          title: `THEMES IN INDIAN HISTORY PART-III (XII)`,
+          bookCode: 'part-3',
+          coverBg: 'linear-gradient(135deg, #059669 0%, #064e3b 100%)',
+          textColor: '#ffffff',
+          tag: 'Part III • NCERT lehs3 / lhhs3 (Themes 9–12)'
+        }
+      ];
+    }
+
+    if (subjId === 'c12-bs' || subjId === 'c11-bs') {
+      const clsLabel = subjId.startsWith('c11') ? 'XI' : 'XII';
+      return [
+        {
+          id: 'part-1',
+          title: `BUSINESS STUDIES PART-I (${clsLabel})`,
+          bookCode: 'part-1',
+          coverBg: 'linear-gradient(135deg, #d97706 0%, #78350f 100%)',
+          textColor: '#ffffff',
+          tag: 'Principles & Functions of Management'
+        },
+        {
+          id: 'part-2',
+          title: `BUSINESS STUDIES PART-II (${clsLabel})`,
+          bookCode: 'part-2',
+          coverBg: 'linear-gradient(135deg, #0284c7 0%, #082f49 100%)',
+          textColor: '#ffffff',
+          tag: 'Business Finance & Marketing'
+        }
+      ];
+    }
+
+    if (subjId === 'c12-biology') {
+      return [
+        {
+          id: 'part-1',
+          title: `BIOLOGY TEXTBOOK (XII)`,
+          bookCode: 'part-1',
+          coverBg: 'linear-gradient(135deg, #10b981 0%, #064e3b 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Textbook • lebo1 (13 Chapters)'
+        },
+        {
+          id: 'exemplar',
+          title: `BIOLOGY EXEMPLAR (XII)`,
+          bookCode: 'exemplar',
+          coverBg: 'linear-gradient(135deg, #d97706 0%, #78350f 100%)',
+          textColor: '#ffffff',
+          tag: 'Exemplar Problems • leep4 (13 Units)'
+        }
+      ];
+    }
+
+    if (subjId === 'c9-social-science') {
+      return [
+        {
+          id: 'part-1',
+          title: `INDIA & CONTEMPORARY WORLD - I (HISTORY)`,
+          bookCode: 'iess1',
+          coverBg: 'linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%)',
+          textColor: '#ffffff',
+          tag: 'History • NCERT iess1'
+        },
+        {
+          id: 'part-2',
+          title: `CONTEMPORARY INDIA - I (GEOGRAPHY)`,
+          bookCode: 'iess2',
+          coverBg: 'linear-gradient(135deg, #059669 0%, #064e3b 100%)',
+          textColor: '#ffffff',
+          tag: 'Geography • NCERT iess2'
+        },
+        {
+          id: 'part-3',
+          title: `DEMOCRATIC POLITICS - I (CIVICS)`,
+          bookCode: 'iess3',
+          coverBg: 'linear-gradient(135deg, #0284c7 0%, #0c4a6e 100%)',
+          textColor: '#ffffff',
+          tag: 'Civics • NCERT iess3'
+        },
+        {
+          id: 'part-4',
+          title: `ECONOMICS (CLASS IX)`,
+          bookCode: 'iess4',
+          coverBg: 'linear-gradient(135deg, #d97706 0%, #78350f 100%)',
+          textColor: '#ffffff',
+          tag: 'Economics • NCERT iess4'
+        }
+      ];
+    }
+
+    if (subjId === 'c9-maths') {
+      return [
+        {
+          id: 'part-1',
+          title: `GANITA MANJARI (गणित मंजरी - CLASS IX)`,
+          bookCode: 'iemh1',
+          coverBg: 'linear-gradient(135deg, #4f46e5 0%, #312e81 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Rationalised Textbook • iemh1 (12 Chapters)'
+        },
+        {
+          id: 'class9-maths-40marks',
+          title: `CH 4 & CH 5 MASTER EXAM SUITE (40 MARKS)`,
+          bookCode: 'class9-maths-40marks',
+          coverBg: 'linear-gradient(135deg, #8b5cf6 0%, #4c1d95 100%)',
+          textColor: '#ffffff',
+          tag: '30 High-Yield MCQs • Graphical & Numerical Problem Solving'
+        },
+        {
+          id: 'euclid-interactive',
+          title: `EUCLID'S GEOMETRY INTERACTIVE LAB`,
+          bookCode: 'euclid-lab',
+          coverBg: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+          textColor: '#ffffff',
+          tag: '5 Postulates & Axioms • Interactive Geometric Studio'
+        },
+        {
+          id: 'circle-theorems-lab',
+          title: `CIRCLES & THEOREMS INTERACTIVE LAB`,
+          bookCode: 'circle-lab',
+          coverBg: 'linear-gradient(135deg, #059669 0%, #064e3b 100%)',
+          textColor: '#ffffff',
+          tag: 'Ch 5 Circles • Theorem 1–11 Visual Demonstrations'
+        },
+        {
+          id: 'coord-geometry-studio',
+          title: `COORDINATE GEOMETRY STEP-BY-STEP NUMERICALS`,
+          bookCode: 'coord-studio',
+          coverBg: 'linear-gradient(135deg, #d97706 0%, #78350f 100%)',
+          textColor: '#ffffff',
+          tag: 'Cartesian Coordinate System • Plotting & Distance Numericals'
+        }
+      ];
+    }
+
+    if (subjId === 'c9-science') {
+      return [
+        {
+          id: 'part-1',
+          title: `EXPLORATION (SCIENCE TEXTBOOK - CLASS IX)`,
+          bookCode: 'iesc1',
+          coverBg: 'linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%)',
+          textColor: '#ffffff',
+          tag: 'New NCERT Exploration • iesc1 (12 Chapters)'
+        },
+        {
+          id: 'motion-force-numericals',
+          title: `MOTION & FORCE MASTER NUMERICALS & PROBLEMS`,
+          bookCode: 'motion-numericals',
+          coverBg: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
+          textColor: '#ffffff',
+          tag: '25 Problems • Distance, Speed, Accel & Newton’s F=ma'
+        },
+        {
+          id: 'ch6-how-forces-affect-motion',
+          title: `CHAPTER 6: HOW FORCES AFFECT MOTION (NOTES & MCQS)`,
+          bookCode: 'forces-motion-notes',
+          coverBg: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
+          textColor: '#ffffff',
+          tag: 'Complete Chapter Notes • 20 Bilingual MCQs & Solutions'
+        }
+      ];
+    }
+
+    if (subjId === 'c9-hindi-grammar') {
+      return [
+        {
+          id: 'part-1',
+          title: `HINDI GRAMMAR MASTERCLASS (कक्षा 9 हिंदी व्याकरण)`,
+          bookCode: 'ihgv1',
+          coverBg: 'linear-gradient(135deg, #e11d48 0%, #9f1239 100%)',
+          textColor: '#ffffff',
+          tag: '4 मुख्य स्तंभ • उपसर्ग, प्रत्यय, 6 समास, वाक्य भेद व अलंकार'
+        },
+        {
+          id: 'grammar-mastery-studio',
+          title: `HINDI GRAMMAR INTERACTIVE STUDIO (लाइव व्याकरण स्टूडियो)`,
+          bookCode: 'grammar-studio',
+          coverBg: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+          textColor: '#ffffff',
+          tag: 'लाइव समास अन्वेषक • 20 MCQs टेस्ट व 20 रिक्त स्थान पूर्ति'
+        }
+      ];
+    }
+
+    if (subjId === 'c9-hindi') {
+      return [
+        {
+          id: 'part-1',
+          title: `गंगा / GANGA (NCERT TEXTBOOK - IX)`,
+          bookCode: 'ihga1',
+          coverBg: 'linear-gradient(135deg, #e11d48 0%, #881337 100%)',
+          textColor: '#ffffff',
+          tag: 'गद्य एवं काव्य खंड • 12 संपूर्ण अध्याय'
+        },
+        {
+          id: 'grammar-mastery-studio',
+          title: `कक्षा 9 हिंदी व्याकरण महा-अध्याय (GRAMMAR STUDIO)`,
+          bookCode: 'grammar-studio',
+          coverBg: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+          textColor: '#ffffff',
+          tag: 'उपसर्ग-प्रत्यय, समास, वाक्य भेद, अलंकार व 20 MCQs'
+        }
+      ];
+    }
+
+    if (subjId === 'c12-geography') {
+      return [
+        {
+          id: 'solved-paper-64-3-1',
+          title: `CBSE CLASS 12 GEOGRAPHY BOARD PAPER (64/3/1)`,
+          bookCode: 'paper-64-3-1',
+          coverBg: 'linear-gradient(135deg, #10b981 0%, #064e3b 100%)',
+          textColor: '#ffffff',
+          tag: 'Official Board Paper 64/3/1 • Solved with Hidden Answers'
+        },
+        {
+          id: 'part-1',
+          title: `FUNDAMENTALS OF HUMAN GEOGRAPHY (CLASS XII)`,
+          bookCode: 'legy1',
+          coverBg: 'linear-gradient(135deg, #059669 0%, #064e3b 100%)',
+          textColor: '#ffffff',
+          tag: 'Part I: Human Geography • NCERT legy1'
+        },
+        {
+          id: 'part-2',
+          title: `INDIA: PEOPLE AND ECONOMY (CLASS XII)`,
+          bookCode: 'legy2',
+          coverBg: 'linear-gradient(135deg, #0284c7 0%, #082f49 100%)',
+          textColor: '#ffffff',
+          tag: 'Part II: India Economy • NCERT legy2'
+        }
+      ];
+    }
+
+    if (subjId === 'c11-economics' || subjId === 'c11-economics-stats') {
+      return [
+        {
+          id: 'part-1',
+          title: 'STATISTICS FOR ECONOMICS (XI)',
+          bookCode: 'kest1',
+          coverBg: 'linear-gradient(135deg, #059669 0%, #064e3b 100%)',
+          textColor: '#ffffff',
+          tag: 'Part I: Statistics • NCERT kest1'
+        },
+        {
+          id: 'part-2',
+          title: 'INDIAN ECONOMIC DEVELOPMENT (XI)',
+          bookCode: 'keec1',
+          coverBg: 'linear-gradient(135deg, #0284c7 0%, #082f49 100%)',
+          textColor: '#ffffff',
+          tag: 'Part II: Indian Economy • NCERT keec1'
+        }
+      ];
+    }
+
+    if (subjId === 'c12-economics') {
+      return [
+        {
+          id: 'part-1',
+          title: 'INTRODUCTORY MACROECONOMICS (XII)',
+          bookCode: 'leec1',
+          coverBg: 'linear-gradient(135deg, #059669 0%, #064e3b 100%)',
+          textColor: '#ffffff',
+          tag: 'Part I: Macroeconomics • NCERT leec1'
+        },
+        {
+          id: 'part-2',
+          title: 'INDIAN ECONOMIC DEVELOPMENT (XII)',
+          bookCode: 'leec2',
+          coverBg: 'linear-gradient(135deg, #0284c7 0%, #082f49 100%)',
+          textColor: '#ffffff',
+          tag: 'Part II: Indian Economy • NCERT leec2'
+        }
+      ];
+    }
+
+    if (subjId === 'c5-maths') {
+      return [
+        {
+          id: 'part-1',
+          title: `MATH MELA (गणित मेला - CLASS V)`,
+          bookCode: 'eemm1',
+          coverBg: 'linear-gradient(135deg, #14b8a6 0%, #0f766e 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Math Mela • eemm1 (15 Chapters)'
+        }
+      ];
+    }
+
+    if (subjId === 'c5-evs') {
+      return [
+        {
+          id: 'part-1',
+          title: `OUR WONDROUS WORLD (हमारा अद्भुत संसार - CLASS V)`,
+          bookCode: 'eeev1',
+          coverBg: 'linear-gradient(135deg, #10b981 0%, #064e3b 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Our Wondrous World • eeev1 (10 Chapters)'
+        }
+      ];
+    }
+
+    if (subjId === 'c5-english' || subjId === 'c5-santoor') {
+      return [
+        {
+          id: 'part-1',
+          title: `SANTOOR (संतूर - ENGLISH CLASS V)`,
+          bookCode: 'eesa1',
+          coverBg: 'linear-gradient(135deg, #f59e0b 0%, #b45309 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Santoor • eesa1 (10 Chapters)'
+        }
+      ];
+    }
+
+    if (subjId === 'c5-hindi') {
+      return [
+        {
+          id: 'part-1',
+          title: `VEENA (वीणा - हिंदी कक्षा 5)`,
+          bookCode: 'ehve1',
+          coverBg: 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Veena • ehve1 (12 पाठ)'
+        }
+      ];
+    }
+
+    if (subjId === 'c7-english') {
+      return [
+        {
+          id: 'part-1',
+          title: `POORVI (पूर्वी - CLASS VII)`,
+          bookCode: 'gepr1',
+          coverBg: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+          textColor: '#ffffff',
+          tag: 'New NCERT Poorvi • gepr1 (Unit 1 to 5)'
+        },
+        {
+          id: 'part-2',
+          title: `THE MIGHTY BANYAN TREE (COMPREHENSION STUDIO)`,
+          bookCode: 'passage',
+          coverBg: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+          textColor: '#ffffff',
+          tag: 'Interactive Passage • Bilingual MCQs & Answers'
+        },
+        {
+          id: 'part-3',
+          title: `ENGLISH GRAMMAR (30 EASY MCQS)`,
+          bookCode: 'grammar',
+          coverBg: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
+          textColor: '#ffffff',
+          tag: '30 Grammar MCQs • Live Fisher-Yates Shuffle'
+        }
+      ];
+    }
+
+    if (subjId === 'c7-maths') {
+      return [
+        {
+          id: 'part-1',
+          title: `GANITA PRAKASH PART-I (गणित प्रकाश भाग-1)`,
+          bookCode: 'gegp1',
+          coverBg: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+          textColor: '#ffffff',
+          tag: 'New NCERT Ganita Prakash Part-I • gegp1 (Ch 1–8)'
+        },
+        {
+          id: 'part-2',
+          title: `GANITA PRAKASH PART-II (गणित प्रकाश भाग-2)`,
+          bookCode: 'gegp2',
+          coverBg: 'linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%)',
+          textColor: '#ffffff',
+          tag: 'New NCERT Ganita Prakash Part-II • gegp2 (Ch 9–15)'
+        },
+        {
+          id: 'part-3',
+          title: `CHAPTER 6: NUMBER PLAY (20 EXAM MCQS)`,
+          bookCode: 'number-play',
+          coverBg: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
+          textColor: '#ffffff',
+          tag: 'Magic Squares, Parity & 20 Bilingual MCQs'
+        }
+      ];
+    }
+
+    if (subjId === 'c7-science') {
+      return [
+        {
+          id: 'part-1',
+          title: `CURIOSITY (विज्ञान / जिज्ञासा - CLASS VII)`,
+          bookCode: 'gecu1',
+          coverBg: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
+          textColor: '#ffffff',
+          tag: 'New NCERT Curiosity • gecu1 (12 Chapters)'
+        },
+        {
+          id: 'part-2',
+          title: `CHAPTER 6: ADOLESCENCE (WORKSHEET & A5 SHEET)`,
+          bookCode: 'adolescence',
+          coverBg: 'linear-gradient(135deg, #059669 0%, #064e3b 100%)',
+          textColor: '#ffffff',
+          tag: 'Interactive Worksheet & Bilingual Questions'
+        },
+        {
+          id: 'part-3',
+          title: `CHAPTER 9: LIFE PROCESSES IN ANIMALS (NOTES)`,
+          bookCode: 'life-processes-notes',
+          coverBg: 'linear-gradient(135deg, #34d399 0%, #059669 100%)',
+          textColor: '#ffffff',
+          tag: 'Complete Notes • Digestion, Villi, Respiration & Breathing'
+        }
+      ];
+    }
+
+    if (subjId === 'c7-social-science') {
+      return [
+        {
+          id: 'part-1',
+          title: `EXPLORING SOCIETY INDIA & BEYOND PART-I`,
+          bookCode: 'gees1',
+          coverBg: 'linear-gradient(135deg, #06b6d4 0%, #0e7490 100%)',
+          textColor: '#ffffff',
+          tag: 'New NCERT Exploring Society Part-I • gees1 (Ch 1–12)'
+        },
+        {
+          id: 'part-2',
+          title: `EXPLORING SOCIETY INDIA & BEYOND PART-II`,
+          bookCode: 'gees2',
+          coverBg: 'linear-gradient(135deg, #0284c7 0%, #075985 100%)',
+          textColor: '#ffffff',
+          tag: 'New NCERT Exploring Society Part-II • gees2 (Ch 13–20)'
+        },
+        {
+          id: 'part-3',
+          title: `CHAPTER 2: UNDERSTANDING THE WEATHER (25 MCQS)`,
+          bookCode: 'weather-mcqs',
+          coverBg: 'linear-gradient(135deg, #0284c7 0%, #1e40af 100%)',
+          textColor: '#ffffff',
+          tag: '25 Bilingual MCQs • Weather Elements & AWS'
+        }
+      ];
+    }
+
+    if (subjId === 'c7-hindi') {
+      return [
+        {
+          id: 'part-1',
+          title: `MALHAR (मल्हार - कक्षा 7)`,
+          bookCode: 'ghml1',
+          coverBg: 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)',
+          textColor: '#ffffff',
+          tag: 'New NCERT Malhar • ghml1 (10 Chapters)'
+        },
+        {
+          id: 'part-2',
+          title: `माँ, कह एक कहानी (अभ्यास एवं रिक्त स्थान)`,
+          bookCode: 'maa-kah-ek-kahani',
+          coverBg: 'linear-gradient(135deg, #f43f5e 0%, #9f1239 100%)',
+          textColor: '#ffffff',
+          tag: 'संवादपरक कविता • सम्पूर्ण समाधान एवं क्विज़'
+        }
+      ];
+    }
+
+    if (subjId === 'c7-sanskrit') {
+      return [
+        {
+          id: 'part-1',
+          title: `DEEPAKAM (दीपकम - कक्षा 7)`,
+          bookCode: 'gsde1',
+          coverBg: 'linear-gradient(135deg, #9333ea 0%, #6b21a8 100%)',
+          textColor: '#ffffff',
+          tag: 'New NCERT Deepakam • gsde1 (15 Chapters)'
+        }
+      ];
+    }
+
+    if (subjId === 'c7-arts') {
+      return [
+        {
+          id: 'part-1',
+          title: `KRITI (कृति - कला शिक्षा CLASS VII)`,
+          bookCode: 'gekr1',
+          coverBg: 'linear-gradient(135deg, #f43f5e 0%, #be123c 100%)',
+          textColor: '#ffffff',
+          tag: 'New NCERT Kriti Art Education • gekr1 (20 Units)'
+        }
+      ];
+    }
+
+    if (subjId === 'c7-physical-education') {
+      return [
+        {
+          id: 'part-1',
+          title: `KHEL YATRA (खेल यात्रा - PHYSICAL EDUCATION CLASS VII)`,
+          bookCode: 'geky1',
+          coverBg: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
+          textColor: '#ffffff',
+          tag: 'New NCERT Physical Education & Well Being • geky1 (6 Chapters)'
+        }
+      ];
+    }
+
+    if (subjId === 'c7-vocational') {
+      return [
+        {
+          id: 'part-1',
+          title: `KAUSHAL BODH (कौशल बोध - VOCATIONAL EDUCATION CLASS VII)`,
+          bookCode: 'gekb1',
+          coverBg: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+          textColor: '#ffffff',
+          tag: 'New NCERT Vocational Education • gekb1 (7 Chapters)'
+        }
+      ];
+    }
+
+    if (subjId === 'c7-urdu') {
+      return [
+        {
+          id: 'part-1',
+          title: `KHAYAL (ख्याल - URDU CLASS VII)`,
+          bookCode: 'guky1',
+          coverBg: 'linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)',
+          textColor: '#ffffff',
+          tag: 'New NCERT Khayal Urdu • guky1 (14 Chapters)'
+        }
+      ];
+    }
+
+    // ── Class 1 NCERT Textbooks ──
+    if (subjId === 'c1-english') {
+      return [
+        {
+          id: 'part-1',
+          title: `MRIDANG (मृदंग - ENGLISH CLASS I)`,
+          bookCode: 'aemr1',
+          coverBg: 'linear-gradient(135deg, #f59e0b 0%, #b45309 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Mridang • aemr1 (9 Chapters)'
+        }
+      ];
+    }
+    if (subjId === 'c1-maths') {
+      return [
+        {
+          id: 'part-1',
+          title: `JOYFUL-MATHEMATICS (आनंदमय गणित - CLASS I)`,
+          bookCode: 'aejm1',
+          coverBg: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Joyful-Mathematics • aejm1 (13 Chapters)'
+        }
+      ];
+    }
+    if (subjId === 'c1-hindi') {
+      return [
+        {
+          id: 'part-1',
+          title: `SARANGI (सारंगी - हिंदी कक्षा 1)`,
+          bookCode: 'ahsr1',
+          coverBg: 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Sarangi • ahsr1 (19 पाठ)'
+        }
+      ];
+    }
+    if (subjId === 'c1-urdu') {
+      return [
+        {
+          id: 'part-1',
+          title: `SHAHNAI (शहनाई - URDU CLASS I)`,
+          bookCode: 'aush1',
+          coverBg: 'linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Shahnai • aush1 (18 Sabaq)'
+        }
+      ];
+    }
+
+    // ── Class 2 NCERT Textbooks ──
+    if (subjId === 'c2-maths') {
+      return [
+        {
+          id: 'part-1',
+          title: `JOYFUL-MATHEMATICS (आनंदमय गणित - CLASS II)`,
+          bookCode: 'bejm1',
+          coverBg: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Joyful-Mathematics • bejm1 (11 Chapters)'
+        }
+      ];
+    }
+    if (subjId === 'c2-english') {
+      return [
+        {
+          id: 'part-1',
+          title: `MRIDANG (मृदंग - ENGLISH CLASS II)`,
+          bookCode: 'bemr1',
+          coverBg: 'linear-gradient(135deg, #f59e0b 0%, #b45309 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Mridang • bemr1 (13 Chapters)'
+        }
+      ];
+    }
+    if (subjId === 'c2-hindi') {
+      return [
+        {
+          id: 'part-1',
+          title: `SARANGI (सारंगी - हिंदी कक्षा 2)`,
+          bookCode: 'bhsr1',
+          coverBg: 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Sarangi • bhsr1 (26 पाठ)'
+        }
+      ];
+    }
+    if (subjId === 'c2-urdu') {
+      return [
+        {
+          id: 'part-1',
+          title: `SHAHNAI (शहनाई - URDU CLASS II)`,
+          bookCode: 'bush1',
+          coverBg: 'linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Shahnai • bush1 (19 Sabaq)'
+        }
+      ];
+    }
+
+    // ── Class 3 NCERT Textbooks ──
+    if (subjId === 'c3-maths') {
+      return [
+        {
+          id: 'part-1',
+          title: `MATHS MELA (गणित मेला - CLASS III)`,
+          bookCode: 'cemm1',
+          coverBg: 'linear-gradient(135deg, #0284c7 0%, #075985 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Maths Mela • cemm1 (14 Chapters)'
+        }
+      ];
+    }
+    if (subjId === 'c3-english') {
+      return [
+        {
+          id: 'part-1',
+          title: `SANTOOR (संतूर - ENGLISH CLASS III)`,
+          bookCode: 'cesa1',
+          coverBg: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Santoor • cesa1 (12 Chapters)'
+        }
+      ];
+    }
+    if (subjId === 'c3-hindi') {
+      return [
+        {
+          id: 'part-1',
+          title: `VEENA (वीणा - हिंदी कक्षा 3)`,
+          bookCode: 'chve1',
+          coverBg: 'linear-gradient(135deg, #e11d48 0%, #9f1239 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Veena • chve1 (18 पाठ)'
+        }
+      ];
+    }
+    if (subjId === 'c3-evs') {
+      return [
+        {
+          id: 'part-1',
+          title: `OUR WONDROUS WORLD (हमारा अद्भुत संसार - EVS CLASS III)`,
+          bookCode: 'ceev1',
+          coverBg: 'linear-gradient(135deg, #10b981 0%, #064e3b 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Our Wondrous World • ceev1 (12 Chapters)'
+        }
+      ];
+    }
+
+    // ── Class 4 NCERT Textbooks ──
+    if (subjId === 'c4-maths') {
+      return [
+        {
+          id: 'part-1',
+          title: `MATHS MELA (गणित मेला - CLASS IV)`,
+          bookCode: 'demm1',
+          coverBg: 'linear-gradient(135deg, #0284c7 0%, #075985 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Maths Mela • demm1 (14 Chapters)'
+        }
+      ];
+    }
+    if (subjId === 'c4-english') {
+      return [
+        {
+          id: 'part-1',
+          title: `SANTOOR (संतूर - ENGLISH CLASS IV)`,
+          bookCode: 'desa1',
+          coverBg: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Santoor • desa1 (12 Chapters)'
+        }
+      ];
+    }
+    if (subjId === 'c4-hindi') {
+      return [
+        {
+          id: 'part-1',
+          title: `VEENA (वीणा - हिंदी कक्षा 4)`,
+          bookCode: 'dhve1',
+          coverBg: 'linear-gradient(135deg, #e11d48 0%, #9f1239 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Veena • dhve1 (13 पाठ)'
+        }
+      ];
+    }
+    if (subjId === 'c4-evs') {
+      return [
+        {
+          id: 'part-1',
+          title: `OUR WONDROUS WORLD (हमारा अद्भुत संसार - EVS CLASS IV)`,
+          bookCode: 'deev1',
+          coverBg: 'linear-gradient(135deg, #10b981 0%, #064e3b 100%)',
+          textColor: '#ffffff',
+          tag: 'NCERT Our Wondrous World • deev1 (10 Chapters)'
+        }
+      ];
+    }
+
+    return [
+      {
+        id: 'part-1',
+        title: `${subject.name.toUpperCase()} TEXTBOOK`,
+        bookCode: 'part-1',
+        coverBg: 'linear-gradient(135deg, #4f46e5 0%, #1e1b4b 100%)',
+        textColor: '#ffffff',
+        tag: 'Textbook'
+      }
+    ];
+  };
+
+  

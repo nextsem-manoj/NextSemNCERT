@@ -250,6 +250,29 @@ function getRomanClass(num: number): string {
   return map[num] || String(num);
 }
 
+
+type StreamFilter = 'all' | 'science' | 'commerce' | 'arts';
+
+function getSubjectStream(subj: Subject): 'science' | 'commerce' | 'arts' {
+  const clean = (subj.id + ' ' + subj.name).toLowerCase();
+  if (clean.includes('account') || clean.includes('business') || clean.includes('b.st') || clean.includes('commerce')) {
+    return 'commerce';
+  }
+  if (clean.includes('physics') || clean.includes('chem') || clean.includes('bio') || clean.includes('computer')) {
+    return 'science';
+  }
+  if (clean.includes('math')) {
+    return 'science'; // Shared with commerce
+  }
+  if (clean.includes('history') || clean.includes('pol') || clean.includes('geo') || clean.includes('sociology') || clean.includes('भूगोल') || clean.includes('राजनीति') || clean.includes('इतिहास')) {
+    return 'arts';
+  }
+  if (clean.includes('economic') || clean.includes('stats')) {
+    return 'commerce'; // Shared with arts
+  }
+  return 'arts';
+}
+
 export const SubjectList: React.FC<SubjectListProps> = ({
   subjects,
   selectedSubject,
@@ -259,6 +282,7 @@ export const SubjectList: React.FC<SubjectListProps> = ({
   isSubjectBookmarked,
   onBack
 }) => {
+    const [activeStream, setActiveStream] = useState<StreamFilter>('all');
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
     const saved = localStorage.getItem('nextsem_subject_view_mode') as ViewMode | null;
     return saved === 'list' || saved === 'tiles' || saved === 'large' ? saved : 'tiles';
@@ -268,6 +292,23 @@ export const SubjectList: React.FC<SubjectListProps> = ({
     setViewMode(mode);
     localStorage.setItem('nextsem_subject_view_mode', mode);
   };
+
+  
+  const isSeniorOrBoard = selectedClassNum >= 10;
+  const isStreamClass = selectedClassNum === 11 || selectedClassNum === 12;
+
+  // Filter subjects by stream when Class 11 or 12
+  const visibleSubjects = subjects.filter((subj) => {
+    if (!isStreamClass || activeStream === 'all') return true;
+    const stream = getSubjectStream(subj);
+    if (stream === activeStream) return true;
+    if (activeStream === 'commerce' && (subj.id.includes('math') || subj.id.includes('eco'))) return true;
+    if (activeStream === 'arts' && subj.id.includes('eco')) return true;
+    if (activeStream === 'science' && subj.id.includes('english')) return true;
+    if (activeStream === 'commerce' && subj.id.includes('english')) return true;
+    if (activeStream === 'arts' && subj.id.includes('english')) return true;
+    return false;
+  });
 
   return (
     <div style={{
@@ -448,6 +489,52 @@ export const SubjectList: React.FC<SubjectListProps> = ({
           </div>
         </div>
 
+        {/* Stream Filter Bar (Science, Commerce, Arts for Class 11 & 12 per L32) */}
+        {isStreamClass && (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '10px 18px',
+            background: 'var(--bg-secondary)',
+            borderBottom: '1px solid var(--border-color)',
+            overflowX: 'auto'
+          }}>
+            <span style={{ fontSize: '0.74rem', fontWeight: 800, color: 'var(--text-muted)', textTransform: 'uppercase', marginRight: '4px' }}>
+              Streams:
+            </span>
+            {[
+              { id: 'all', label: 'All Subjects' },
+              { id: 'science', label: '🔬 Science' },
+              { id: 'commerce', label: '📊 Commerce' },
+              { id: 'arts', label: '🏛️ Arts / Humanities' }
+            ].map(tab => {
+              const isActive = activeStream === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveStream(tab.id as StreamFilter)}
+                  style={{
+                    padding: '6px 14px',
+                    borderRadius: '9999px',
+                    fontSize: '0.78rem',
+                    fontWeight: 800,
+                    border: isActive ? '1.5px solid #4f46e5' : '1px solid var(--border-color)',
+                    background: isActive ? 'rgba(79, 70, 229, 0.15)' : 'var(--bg-card)',
+                    color: isActive ? '#4f46e5' : 'var(--text-secondary)',
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  {tab.label}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
         {/* 1. LIST VIEW (Horizontal Rows) */}
         {viewMode === 'list' && (
           <div style={{
@@ -457,7 +544,7 @@ export const SubjectList: React.FC<SubjectListProps> = ({
             padding: '14px',
             background: 'var(--bg-card)'
           }}>
-            {subjects.map((subject) => {
+            {visibleSubjects.map((subject) => {
               const isSelected = selectedSubject?.id === subject.id;
               const badge = getSubjectBadgeMeta(subject.name);
               const isBookmarked = isSubjectBookmarked ? isSubjectBookmarked(subject.id) : false;
@@ -491,17 +578,32 @@ export const SubjectList: React.FC<SubjectListProps> = ({
                 >
                   {/* Left: 3D Book Cover Thumbnail + Title */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: 1, minWidth: 0 }}>
-                    <div style={{
-                      width: '44px',
-                      height: '60px',
-                      borderRadius: '3px 6px 6px 3px',
-                      overflow: 'hidden',
-                      boxShadow: '0 4px 10px rgba(0, 0, 0, 0.35)',
-                      borderLeft: '2.5px solid rgba(255, 255, 255, 0.5)',
-                      borderTop: '1px solid rgba(255, 255, 255, 0.2)',
-                      flexShrink: 0,
-                      background: '#0c1322'
-                    }}>
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSelectSubject(subject);
+                      }}
+                      title={`Open ${subject.name}`}
+                      style={{
+                        width: '44px',
+                        height: '60px',
+                        borderRadius: '3px 6px 6px 3px',
+                        overflow: 'hidden',
+                        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.35)',
+                        borderLeft: '2.5px solid rgba(255, 255, 255, 0.5)',
+                        borderTop: '1px solid rgba(255, 255, 255, 0.2)',
+                        flexShrink: 0,
+                        background: '#0c1322',
+                        cursor: 'pointer',
+                        transition: 'transform 0.15s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.05)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                      }}
+                    >
                       {coverImg ? (
                         <img src={coverImg} alt={subject.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                       ) : (
@@ -581,7 +683,7 @@ export const SubjectList: React.FC<SubjectListProps> = ({
             padding: '16px',
             background: 'var(--bg-card)'
           }}>
-            {subjects.map((subject) => {
+            {visibleSubjects.map((subject) => {
               const isSelected = selectedSubject?.id === subject.id;
               const badge = getSubjectBadgeMeta(subject.name);
               const isBookmarked = isSubjectBookmarked ? isSubjectBookmarked(subject.id) : false;
@@ -646,12 +748,27 @@ export const SubjectList: React.FC<SubjectListProps> = ({
                   )}
 
                   {/* 3D Realistic NCERT Book Cover Thumbnail */}
-                  <div style={{
-                    width: '68px',
-                    height: '92px',
-                    position: 'relative',
-                    marginBottom: '10px'
-                  }}>
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectSubject(subject);
+                    }}
+                    title={`Open ${subject.name}`}
+                    style={{
+                      width: '68px',
+                      height: '92px',
+                      position: 'relative',
+                      marginBottom: '10px',
+                      cursor: 'pointer',
+                      transition: 'transform 0.15s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.05)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  >
                     {coverImg ? (
                       <div style={{
                         width: '100%',
@@ -757,7 +874,7 @@ export const SubjectList: React.FC<SubjectListProps> = ({
             padding: '18px',
             background: 'var(--bg-card)'
           }}>
-            {subjects.map((subject) => {
+            {visibleSubjects.map((subject) => {
               const isSelected = selectedSubject?.id === subject.id;
               const badge = getSubjectBadgeMeta(subject.name);
               const isBookmarked = isSubjectBookmarked ? isSubjectBookmarked(subject.id) : false;
@@ -814,18 +931,33 @@ export const SubjectList: React.FC<SubjectListProps> = ({
                   )}
 
                   {/* Large 3D NCERT Book Cover */}
-                  <div style={{
-                    width: '120px',
-                    height: '168px',
-                    position: 'relative',
-                    marginBottom: '16px',
-                    borderRadius: '6px 12px 12px 6px',
-                    overflow: 'hidden',
-                    boxShadow: '0 10px 24px rgba(0, 0, 0, 0.5)',
-                    borderLeft: '5px solid rgba(255, 255, 255, 0.6)',
-                    borderTop: '1px solid rgba(255, 255, 255, 0.25)',
-                    background: '#0c1322'
-                  }}>
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectSubject(subject);
+                    }}
+                    title={`Open ${subject.name}`}
+                    style={{
+                      width: '120px',
+                      height: '168px',
+                      position: 'relative',
+                      marginBottom: '16px',
+                      borderRadius: '6px 12px 12px 6px',
+                      overflow: 'hidden',
+                      boxShadow: '0 10px 24px rgba(0, 0, 0, 0.5)',
+                      borderLeft: '5px solid rgba(255, 255, 255, 0.6)',
+                      borderTop: '1px solid rgba(255, 255, 255, 0.25)',
+                      background: '#0c1322',
+                      cursor: 'pointer',
+                      transition: 'transform 0.15s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.05)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  >
                     {coverImg ? (
                       <img
                         src={coverImg}
@@ -872,15 +1004,26 @@ export const SubjectList: React.FC<SubjectListProps> = ({
                   </h3>
 
                   {/* Subject Description */}
-                  <p style={{
-                    fontSize: '0.78rem',
-                    color: 'var(--text-muted)',
-                    margin: '0 0 12px',
-                    lineHeight: 1.4,
-                    maxWidth: '240px'
-                  }}>
-                    {subject.description}
-                  </p>
+                  {/* Clean NEP Policy Indicator */}
+                  <div style={{ margin: '0 0 12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <span style={{
+                      fontSize: '0.68rem',
+                      fontWeight: 800,
+                      color: '#059669',
+                      background: 'rgba(16, 185, 129, 0.12)',
+                      border: '1px solid rgba(16, 185, 129, 0.35)',
+                      padding: '2px 8px',
+                      borderRadius: '6px',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.04em',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}>
+                      <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: isSeniorOrBoard ? '#f59e0b' : '#10b981' }} />
+                      {isSeniorOrBoard ? 'NEW SYLLABUS (RATIONALIZED)' : 'NEW NCERT (NEP)'}
+                    </span>
+                  </div>
 
                   {/* Bottom Action Deck */}
                   <div style={{

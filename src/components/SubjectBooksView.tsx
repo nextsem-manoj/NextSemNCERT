@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Bookmark, FolderOpen, List, LayoutGrid, Maximize2, Sparkles, BookOpen } from 'lucide-react';
 import type { Subject } from '../data/ncertData';
 import { SHARED_NCERT_DRIVE_FOLDER_URL } from '../utils/googleDriveHelper';
@@ -1038,6 +1038,13 @@ export const SubjectBooksView: React.FC<SubjectBooksViewProps> = ({
   };
 
   const bookParts = getBookParts(subject.id);
+
+  // If a subject only has 1 standard textbook (like Class 11 Maths), auto-open its lessons directly
+  useEffect(() => {
+    if (bookParts.length === 1 && bookParts[0].id === 'part-1' && !bookParts[0].bookCode.includes('-')) {
+      onSelectBookPart(bookParts[0].id, bookParts[0].title, bookParts[0].bookCode);
+    }
+  }, [subject.id]);
 
   const handleBookClick = (book: typeof bookParts[0]) => {
     if (book.id === 'solved-paper-64-3-1') {

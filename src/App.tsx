@@ -11,6 +11,7 @@ import { SubjectBooksView } from './components/SubjectBooksView';
 import { BookChaptersView } from './components/BookChaptersView';
 import { PdfReaderView } from './components/PdfReaderView';
 import { BookmarksModal } from './components/BookmarksModal';
+import { LoginModal } from './components/LoginModal';
 import { SolutionViewer } from './components/SolutionViewer';
 import { AdminPortalView } from './components/AdminPortalView';
 import { Footer } from './components/Footer';
@@ -47,6 +48,7 @@ import { Class9PageView } from './components/pages/Class9PageView';
 import { Class11PageView } from './components/pages/Class11PageView';
 import { BilingualPdfMergerView } from './components/pages/BilingualPdfMergerView';
 import { KidsFoundationalWorksheetView } from './components/pages/KidsFoundationalWorksheetView';
+import { FirstVisitClassModal } from './components/FirstVisitClassModal';
 import { Search } from 'lucide-react';
 
 // App View Modes including dedicated drawer pages and Admin portal
@@ -63,8 +65,8 @@ function getInitialStateFromUrl() {
 
   const classesData = getMergedClassesData(CLASSES_DATA);
 
-  let initialClass = classParam ? Number(classParam) : 12;
-  const classInfo = classesData.find(c => c.classNumber === initialClass) || classesData.find(c => c.classNumber === 12)!;
+  let initialClass: number | null = classParam ? Number(classParam) : null;
+  const classInfo = (initialClass ? classesData.find(c => c.classNumber === initialClass) : null) || classesData.find(c => c.classNumber === 10)!;
   
   let initialSubject: Subject | null = null;
   if (subjectParam) {
@@ -103,7 +105,7 @@ function getInitialStateFromUrl() {
     initialChapter = initialSubject.chapters.find(ch => ch.chapterNumber === Number(chapterParam)) || null;
   }
 
-  let initialViewMode: ViewMode = 'CLASSES';
+  let initialViewMode: ViewMode = 'DASHBOARD';
   const normalizedPath = pathname.replace(/\/$/, '');
 
   if (normalizedPath === '/class11' || normalizedPath === '/class-11' || pathname === '/class11.html' || (classParam === '11' && !subjectParam && !viewParam)) {
@@ -322,6 +324,7 @@ export function App() {
 
   // Modals & Drawers state
   const [isBookmarksOpen, setIsBookmarksOpen] = useState<boolean>(false);
+  const [isLoginOpen, setIsLoginOpen] = useState<boolean>(false);
   const [isQuizzesOpen, setIsQuizzesOpen] = useState<boolean>(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
   const [wipCategoryName, setWipCategoryName] = useState<string | null>(null);
@@ -359,6 +362,13 @@ export function App() {
 
   // App Update Modal State
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState<boolean>(false);
+  const [isFirstVisitModalOpen, setIsFirstVisitModalOpen] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    const hasVisited = localStorage.getItem("nextsem_has_selected_class");
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("class") || params.get("view") || params.get("chapter")) return false;
+    return !hasVisited;
+  });
 
   // Curriculum Board State: NCERT vs NIOS
   const [currentBoard, setCurrentBoard] = useState<'NCERT' | 'NIOS'>(() => {
@@ -377,7 +387,8 @@ export function App() {
   };
 
   // Navigation & Selection State
-  const [selectedClass, setSelectedClass] = useState<number>(initialState.initialClass);
+  const [selectedClass, setSelectedClass] = useState<number>(initialState.initialClass || 10);
+  const [hasUserSelectedClass, setHasUserSelectedClass] = useState<boolean>(initialState.initialClass !== null);
   const [selectedSubject, setSelectedSubject] = useState<Subject | null>(initialState.initialSubject);
   const [selectedBookPartId, setSelectedBookPartId] = useState<string>(initialState.initialBookPartId);
   const [selectedBookTitle, setSelectedBookTitle] = useState<string>(initialState.initialBookTitle);
@@ -586,8 +597,8 @@ export function App() {
         navigateTo({ viewMode: 'CLASS_SUBJECTS', selectedClass });
         return;
       }
-      if (viewMode !== 'CLASSES') {
-        setViewMode('CLASSES');
+      if (viewMode !== 'DASHBOARD') {
+        setViewMode('DASHBOARD');
       }
       return;
     }
@@ -765,8 +776,9 @@ export function App() {
   };
 
   const getBreadcrumbs = (): Array<{ label: string; onClick?: () => void }> => {
+    if (viewMode === 'DASHBOARD' || (viewMode === 'CLASSES' && !activeSection)) return [];
     const crumbs: Array<{ label: string; onClick?: () => void }> = [
-      { label: 'Home', onClick: () => navigateTo({ viewMode: 'CLASSES' }) }
+      { label: 'Home', onClick: () => navigateTo({ viewMode: 'DASHBOARD' }) }
     ];
 
     if (viewMode === 'SCHEDULE_BUILDER') {
@@ -994,7 +1006,7 @@ export function App() {
       
       {/* Header Navigation with Active View State, Desktop Breadcrumbs & Search Input */}
       <Navbar
-        onHomeClick={() => navigateTo({ viewMode: 'CLASSES' })}
+        onHomeClick={() => navigateTo({ viewMode: 'DASHBOARD' })}
         onOpenDrawer={() => setIsDrawerOpen(true)}
         onOpenAcademyClasses={() => navigateTo({ viewMode: 'ACADEMY_CLASSES' })}
         onOpenSolutionsPage={() => navigateTo({ viewMode: 'NCERT_SOLUTIONS' })}
@@ -1013,7 +1025,7 @@ export function App() {
       />
 
       {/* Complete Breadcrumb Address Bar on All Pages Just Below Navbar */}
-      <BreadcrumbAddressBar breadcrumbs={getBreadcrumbs()} />
+      <BreadcrumbAddressBar breadcrumbs={(viewMode === 'DASHBOARD' || (viewMode === 'CLASSES' && !activeSection)) ? [] : getBreadcrumbs()} />
 
       {/* Main Content Area */}
       <main style={{ flex: 1 }}>
@@ -1056,8 +1068,26 @@ export function App() {
             {viewMode === 'DASHBOARD' && (
               <AppDashboard 
                 selectedClass={selectedClass}
+                classesData={activeClassesData}
                 onSelectClass={(clsNum) => {
                   navigateTo({ viewMode: 'CLASS_SUBJECTS', selectedClass: clsNum, selectedSubject: null });
+                }}
+                onSelectSubject={(clsNum, subj) => {
+                  if (clsNum <= 5) {
+                    navigateTo({
+                      viewMode: 'BOOK_CHAPTERS',
+                      selectedClass: clsNum,
+                      selectedSubject: subj,
+                      selectedBookPartId: 'part-1',
+                      selectedBookTitle: subj.name
+                    });
+                  } else {
+                    navigateTo({
+                      viewMode: 'SUBJECT_BOOKS',
+                      selectedClass: clsNum,
+                      selectedSubject: subj
+                    });
+                  }
                 }}
                 onSelectCategory={(cat) => {
                   if (cat === 'ncert-books') {
@@ -1674,31 +1704,45 @@ export function App() {
       <MobileBottomNav
         viewMode={viewMode}
         selectedClass={selectedClass}
+        hasUserSelectedClass={hasUserSelectedClass}
         selectedSubjectName={selectedSubject?.name}
         selectedChapterNumber={selectedChapter?.chapterNumber}
         selectedBookTitle={selectedBookTitle}
         onNavigateHome={() => {
-          navigateTo({ viewMode: 'CLASSES', selectedSubject: null, selectedChapter: null });
+          navigateTo({ viewMode: 'DASHBOARD', selectedSubject: null, selectedChapter: null });
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
-        onOpenClassSelector={() => navigateTo({ viewMode: 'CLASSES' })}
-        onNavigateNios={() => {
-          navigateTo({ viewMode: 'NIOS_BOOKS', selectedSubject: null, selectedChapter: null });
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+        onOpenClassSelector={() => {
+          setHasUserSelectedClass(true);
+          navigateTo({ viewMode: 'CLASSES' });
+        }}
+        onOpenSearch={() => {
+          navigateTo({ viewMode: 'DASHBOARD' });
+          setTimeout(() => {
+            const input = document.querySelector('input[placeholder*="Search NCERT"][type="text"]') as HTMLInputElement | null;
+            if (input) {
+              input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              input.focus();
+            }
+          }, 100);
         }}
         onNavigateCurrentLevel={() => {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
         bookmarksCount={bookmarks.length + bookmarkedSubjectIds.length + bookmarkedChapterIds.length}
         openBookmarks={() => navigateTo({ viewMode: 'BOOKMARKS' })}
-        isDarkMode={darkMode}
-        onToggleTheme={() => setDarkMode(prev => !prev)}
       />
 
       {/* Modals & Navigation Drawers */}
       <QuizzesModal
         isOpen={isQuizzesOpen}
         onClose={() => setIsQuizzesOpen(false)}
+        isDarkMode={darkMode}
+      />
+
+      <LoginModal
+        isOpen={isLoginOpen}
+        onClose={() => setIsLoginOpen(false)}
         isDarkMode={darkMode}
       />
 
@@ -1725,6 +1769,7 @@ export function App() {
         currentBoard={currentBoard}
         onSelectBoard={handleSelectBoard}
         onCheckUpdates={() => setIsUpdateModalOpen(true)}
+        onOpenLogin={() => setIsLoginOpen(true)}
         onNavigate={(pageKey) => navigateTo({ viewMode: pageKey })}
         totalBookmarksCount={bookmarkedSubjectIds.length + bookmarkedChapterIds.length}
         totalOfflineCount={(() => {
@@ -1734,6 +1779,26 @@ export function App() {
       />
 
       <AutoUpdateBanner />
+
+      <FirstVisitClassModal
+        isOpen={isFirstVisitModalOpen}
+        onSelectClass={(clsNum, isKg) => {
+          localStorage.setItem("nextsem_has_selected_class", "true");
+          setIsFirstVisitModalOpen(false);
+          if (isKg) {
+            setSelectedKgLevel("all");
+            navigateTo({ viewMode: "KIDS_FOUNDATIONAL_HUB" });
+          } else {
+            const inferredSec = clsNum >= 11 ? "SENIOR" : clsNum >= 6 ? "SECONDARY" : "PRIMARY";
+            setActiveSection(inferredSec);
+            navigateTo({ viewMode: "CLASS_SUBJECTS", selectedClass: clsNum, selectedSubject: null });
+          }
+        }}
+        onDismiss={() => {
+          localStorage.setItem("nextsem_has_selected_class", "true");
+          setIsFirstVisitModalOpen(false);
+        }}
+      />
 
       <AppUpdateModal
         isOpen={isUpdateModalOpen}

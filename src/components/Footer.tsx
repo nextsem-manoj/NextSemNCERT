@@ -23,7 +23,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigatePolicy }) => {
     >
       <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '14px' }}>
         <p style={{ color: 'var(--text-primary)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', fontSize: '0.88rem', margin: 0 }}>
-          StudyGuide by Nextsem • NCERT Solutions &amp; Textbooks Hub
+          NCERT by NextSem • Textbooks, Solutions &amp; Practice Hub
         </p>
 
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: '18px', fontSize: '0.8rem', fontWeight: 700 }}>

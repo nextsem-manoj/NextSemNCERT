@@ -1,11 +1,11 @@
 import React from 'react';
 import {
   X,
-  Globe,
   Moon,
   Sun,
   Smartphone,
   Bookmark,
+  User,
   FolderDown,
   ShieldCheck,
   Share2,
@@ -14,10 +14,7 @@ import {
   ChevronRight,
   RefreshCw,
   Sparkles,
-  GraduationCap,
-  Calendar,
-  Layers,
-  Smile
+  Layers
 } from 'lucide-react';
 
 export type ThemePreference = 'system' | 'dark' | 'light';
@@ -35,6 +32,7 @@ interface NavigationDrawerProps {
   totalBookmarksCount?: number;
   totalOfflineCount?: number;
   onCheckUpdates?: () => void;
+  onOpenLogin?: () => void;
 }
 
 export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
@@ -48,6 +46,7 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
   onSelectBoard,
   onNavigate,
   totalBookmarksCount = 0,
+  onOpenLogin,
   totalOfflineCount = 0,
   onCheckUpdates
 }) => {
@@ -116,8 +115,8 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
                 width: '42px',
                 height: '42px',
                 borderRadius: '11px',
-                background: '#050b14',
-                border: '1.5px solid #00e676',
+                background: darkMode ? '#090d16' : '#ffffff',
+                border: darkMode ? '1.5px solid #4f46e5' : '1.5px solid rgba(79, 70, 229, 0.3)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -128,12 +127,12 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
               }}
             >
               <img
-                src="/studyguide-by-nextsem-logo.jpg"
-                alt="StudyGuide by Nextsem Logo"
+                src={darkMode ? "/ncert-logo-dark.png" : "/ncert-logo-light.png"}
+                alt="NCERT by NextSem Logo"
                 style={{
                   width: '100%',
                   height: '100%',
-                  objectFit: 'cover'
+                  objectFit: 'contain'
                 }}
               />
             </div>
@@ -141,10 +140,10 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
             {/* Typography Header */}
             <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'left', lineHeight: 1.15 }}>
               <span style={{ fontWeight: 900, fontSize: '1.14rem', letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
-                StudyGuide
+                NCERT
               </span>
               <span style={{ color: 'var(--accent-primary, #4f46e5)', fontSize: '0.64rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: '1px' }}>
-                by Nextsem
+                by NextSem
               </span>
             </div>
           </div>
@@ -178,53 +177,6 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
           >
             <X size={18} />
           </button>
-        </div>
-
-        {/* 1B. Nextsem Flagship Universe Portal Link */}
-        <div style={{ padding: '10px 16px 4px' }}>
-          <a
-            href="https://nextsem.online"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '11px 13px',
-              borderRadius: '14px',
-              background: 'linear-gradient(135deg, rgba(4, 170, 109, 0.14) 0%, rgba(20, 184, 166, 0.08) 100%)',
-              border: '1px solid rgba(4, 170, 109, 0.35)',
-              textDecoration: 'none',
-              color: 'var(--text-primary)',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '8px',
-                background: '#04AA6D',
-                color: '#fff',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '1rem',
-                boxShadow: '0 2px 8px rgba(4, 170, 109, 0.4)'
-              }}>
-                <Globe size={18} />
-              </div>
-              <div style={{ textAlign: 'left' }}>
-                <div style={{ fontSize: '0.82rem', fontWeight: 900, color: 'var(--text-primary)' }}>
-                  Nextsem Academy Hub
-                </div>
-                <div style={{ fontSize: '0.67rem', color: '#04AA6D', fontWeight: 700 }}>
-                  College Degrees, Tech Jobs &amp; Coding
-                </div>
-              </div>
-            </div>
-            <span style={{ color: '#04AA6D', fontSize: '0.9rem', fontWeight: 800 }}>❯</span>
-          </a>
         </div>
 
         {/* 2. Theme Segmented Switcher (System / Dark / Light) */}
@@ -404,57 +356,61 @@ export const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
         {/* 3. Navigation Links List */}
         <div style={{ padding: '8px 12px 18px', display: 'flex', flexDirection: 'column', gap: '14px', flex: 1 }}>
 
+          
+          {/* Profile / Student Login Card */}
+          <div style={{ marginBottom: '6px' }}>
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                if (onOpenLogin) onOpenLogin();
+              }}
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '12px 14px',
+                borderRadius: '14px',
+                background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.14) 0%, rgba(16, 185, 129, 0.1) 100%)',
+                border: '1.5px solid rgba(79, 70, 229, 0.35)',
+                cursor: 'pointer',
+                color: 'var(--text-primary)',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #4f46e5 0%, #3730a3 100%)',
+                  color: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 2px 8px rgba(79, 70, 229, 0.4)'
+                }}>
+                  <User size={17} />
+                </div>
+                <div style={{ textAlign: 'left' }}>
+                  <div style={{ fontSize: '0.84rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                    Student &amp; Teacher Login
+                  </div>
+                  <div style={{ fontSize: '0.68rem', color: '#10b981', fontWeight: 700 }}>
+                    Sync bookmarks &amp; notes
+                  </div>
+                </div>
+              </div>
+              <span style={{ color: '#4f46e5', fontSize: '0.82rem', fontWeight: 800 }}>Sign In ❯</span>
+            </button>
+          </div>
+
           {/* Section 1: Academy Academic Curriculum */}
           <div>
             <div style={sectionLabelStyle}>Academic Ecosystem</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <NavItem
-                icon={<GraduationCap size={17} />}
-                iconColor="#10b981"
-                iconBg="rgba(16, 185, 129, 0.16)"
-                title="Nextsem Academy Classes"
-                subtitle="Classes 1 to 12 • Science, Commerce &amp; Arts"
-                badge="EXPLORE"
-                badgeColor="#10b981"
-                badgeBg="rgba(16, 185, 129, 0.16)"
-                highlight
-                onClick={() => {
-                  onClose();
-                  onNavigate('ACADEMY_CLASSES');
-                }}
-              />
-
-              <NavItem
-                icon={<Calendar size={17} />}
-                iconColor="#38bdf8"
-                iconBg="rgba(56, 189, 248, 0.16)"
-                title="Timetable &amp; Lesson Planner"
-                subtitle="Day-wise &amp; time-wise schedule CMS"
-                badge="BUILDER"
-                badgeColor="#38bdf8"
-                badgeBg="rgba(56, 189, 248, 0.16)"
-                onClick={() => {
-                  onClose();
-                  onNavigate('SCHEDULE_BUILDER');
-                }}
-              />
-
-              <NavItem
-                icon={<Smile size={17} />}
-                iconColor="#f59e0b"
-                iconBg="rgba(245, 158, 11, 0.16)"
-                title="Kids Foundational Hub"
-                subtitle="Nursery, LKG, UKG • English, Maths & Hindi"
-                badge="KG • PLAY"
-                badgeColor="#f59e0b"
-                badgeBg="rgba(245, 158, 11, 0.16)"
-                highlight
-                onClick={() => {
-                  onClose();
-                  onNavigate('KIDS_FOUNDATIONAL_HUB');
-                }}
-              />
-            </div>
+              </div>
           </div>
 
           {/* Section 2: Library & Offline Files */}

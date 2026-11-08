@@ -2,8 +2,31 @@
  * Google Drive PDF and Folder Integration Utilities for Nextsem NCERT App
  */
 
+import driveMapJson from '../data/drivePdfMap.json';
+
 export const SHARED_NCERT_DRIVE_FOLDER_ID = '1CnGQZwM0BW9FacI0WnbWfq0VffMcnts4';
 export const SHARED_NCERT_DRIVE_FOLDER_URL = `https://drive.google.com/drive/folders/${SHARED_NCERT_DRIVE_FOLDER_ID}`;
+
+interface DriveMapFileEntry {
+  name: string;
+  driveId: string;
+  previewUrl: string;
+  downloadUrl: string;
+}
+
+const DRIVE_FILES: Record<string, DriveMapFileEntry> = (driveMapJson as { files: Record<string, DriveMapFileEntry> }).files || {};
+
+/**
+ * Looks up a chapter's PDF filename or code in the synced Google Drive map
+ */
+export function getDriveMappedPdf(filenameOrCode: string): DriveMapFileEntry | null {
+  if (!filenameOrCode) return null;
+  const cleanKey = filenameOrCode.toLowerCase().replace(/\.pdf$/, '').trim();
+  if (DRIVE_FILES[cleanKey]) {
+    return DRIVE_FILES[cleanKey];
+  }
+  return null;
+}
 
 /**
  * Extracts the Google Drive File or Folder ID from various URL patterns

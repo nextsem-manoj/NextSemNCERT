@@ -1,4 +1,10 @@
-# Project Rules for StudyGuide by Nextsem
+# Project Rules for NCERT by NextSem
+
+## 🎯 STRICT SCOPE: EXCLUSIVE NCERT WORK ONLY (PERMANENT RULE)
+- **100% NCERT Focused (NEP 2020 / 2026 Curriculum)**: Is repository (`NextSemNCERT`) par ab **sirf aur sirf NCERT** ka kaam hoga (Classes 1 to 12 & Balvatika: Textbooks, Solutions, Rationalized 2026 Syllabi, Notes, Question Banks, Formulas).
+- **Core Purpose: Books Viewable & Downloadable**: NEP 2020 / 2026 new curriculum ke anusaar sabhi NCERT books ko in-app smoothly **Viewable** (high-speed PDF reader) aur **Downloadable** (1-click offline storage & direct download) rakhna hai.
+- Kisi dusre board ya non-NCERT subject ka kaam is repository me nahi aayega.
+- Sabhi pages, hubs, class selectors aur readers strictly **NCERT by NextSem** educational standard ke anusaar hi maintain honge.
 
 ## User Input Preservation & Documentation Integrity
 - **Verbatim Preservation of User Inputs**: When modifying or formatting markdown (`.md`) documentation files, NEVER delete, alter, or replace text or notes explicitly added by the USER.

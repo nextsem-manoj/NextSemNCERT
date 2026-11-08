@@ -3,7 +3,7 @@ import { ArrowLeft, ExternalLink, Download, FileText, ShieldCheck, CheckCircle2,
 import type { Chapter, QuestionSolution } from '../data/ncertData';
 import { getPdfBlobFromDB } from '../utils/pdfStorage';
 import { getOfficialNcertPdfUrl } from './BookChaptersView';
-import { getDrivePreviewUrl, getDriveDownloadUrl, SHARED_NCERT_DRIVE_FOLDER_URL } from '../utils/googleDriveHelper';
+import { getDrivePreviewUrl, getDriveDownloadUrl, SHARED_NCERT_DRIVE_FOLDER_URL, getDriveMappedPdf } from '../utils/googleDriveHelper';
 
 interface PdfReaderViewProps {
   chapter: Chapter;
@@ -132,19 +132,41 @@ export const PdfReaderView: React.FC<PdfReaderViewProps> = ({
     };
   }, [chapter.id]);
 
-  const [viewMode, setViewMode] = useState<'EMBED' | 'HUB'>('EMBED');
-  const [viewerEngine, setViewerEngine] = useState<'DOCS' | 'DIRECT' | 'DRIVE'>('DOCS');
+  // Determine if this is a primary / middle school book (Class 1 to 8)
+  const isClass1to8 = (() => {
+    const id = chapter.id.toLowerCase();
+    const bCode = (chapter.officialBookCode || '').toLowerCase();
+    const bTitle = (bookTitle || '').toLowerCase();
+    // Codes starting with letters: a (class 1), b (class 2), c (class 3), d (class 4), e (class 5), f (class 6), g (class 7), h (class 8)
+    if (/^[a-h][a-z]{3}\d/.test(bCode)) return true;
+    for (let c = 1; c <= 8; c++) {
+      if (id.startsWith(`c${c}-`) || id.includes(`class-${c}`) || id.includes(`class${c}`)) return true;
+      if (bTitle.includes(`class ${c}`) || bTitle.includes(`class-${c}`) || bTitle.includes(`grade ${c}`)) return true;
+    }
+    return false;
+  })();
 
-  const driveEmbedUrl = getDrivePreviewUrl(rawPdfUrl);
-  const driveDownloadUrl = getDriveDownloadUrl(rawPdfUrl);
-  const activePdfSrc = blobUrl || rawPdfUrl;
+  const [viewMode, setViewMode] = useState<'EMBED' | 'HUB'>('EMBED');
+
+  // Check if file is available in Google Drive first
+  const driveMapped = getDriveMappedPdf(filename);
+
+  const [viewerEngine, setViewerEngine] = useState<'DOCS' | 'DIRECT' | 'DRIVE'>(() => {
+    // If available on Drive, default to DRIVE preview (instant 100% reliable embed)
+    if (driveMapped) return 'DRIVE';
+    return 'DIRECT';
+  });
+
+  const driveEmbedUrl = driveMapped ? driveMapped.previewUrl : getDrivePreviewUrl(rawPdfUrl);
+  const driveDownloadUrl = driveMapped ? driveMapped.downloadUrl : getDriveDownloadUrl(rawPdfUrl);
+  const activePdfSrc = blobUrl || (driveMapped ? driveMapped.previewUrl : rawPdfUrl);
 
   const currentEmbedSrc = blobUrl
     ? blobUrl
-    : viewerEngine === 'DIRECT'
-    ? `${rawPdfUrl}#toolbar=1&navpanes=0`
     : viewerEngine === 'DRIVE'
     ? driveEmbedUrl
+    : viewerEngine === 'DIRECT'
+    ? `${rawPdfUrl}#toolbar=1&navpanes=0`
     : `https://docs.google.com/viewer?url=${encodeURIComponent(rawPdfUrl)}&embedded=true`;
 
   return (
@@ -203,48 +225,52 @@ export const PdfReaderView: React.FC<PdfReaderViewProps> = ({
 
         {/* Top Right Actions */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <button
-            onClick={() => setViewMode(viewMode === 'EMBED' ? 'HUB' : 'EMBED')}
-            style={{
-              background: viewMode === 'EMBED' ? 'rgba(79, 70, 229, 0.08)' : 'var(--bg-hover)',
-              border: viewMode === 'EMBED' ? '1px solid #4f46e5' : '1px solid var(--border-color)',
-              color: viewMode === 'EMBED' ? '#4f46e5' : 'var(--text-secondary)',
-              padding: '6px 12px',
-              borderRadius: '8px',
-              fontSize: '0.78rem',
-              fontWeight: 700,
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-          >
-            {viewMode === 'EMBED' ? <Info size={14} /> : <Eye size={14} />}
-            <span>{viewMode === 'EMBED' ? 'Details & Download' : 'In-App Reader'}</span>
-          </button>
+          {!isClass1to8 && (
+            <button
+              onClick={() => setViewMode(viewMode === 'EMBED' ? 'HUB' : 'EMBED')}
+              style={{
+                background: viewMode === 'EMBED' ? 'rgba(79, 70, 229, 0.08)' : 'var(--bg-hover)',
+                border: viewMode === 'EMBED' ? '1px solid #4f46e5' : '1px solid var(--border-color)',
+                color: viewMode === 'EMBED' ? '#4f46e5' : 'var(--text-secondary)',
+                padding: '6px 12px',
+                borderRadius: '8px',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+            >
+              {viewMode === 'EMBED' ? <Info size={14} /> : <Eye size={14} />}
+              <span>{viewMode === 'EMBED' ? 'Details' : 'In-App Reader'}</span>
+            </button>
+          )}
 
-          <a
-            href={SHARED_NCERT_DRIVE_FOLDER_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              background: 'rgba(245, 158, 11, 0.12)',
-              border: '1px solid rgba(245, 158, 11, 0.35)',
-              color: '#d97706',
-              padding: '6px 12px',
-              borderRadius: '8px',
-              fontSize: '0.78rem',
-              fontWeight: 700,
-              textDecoration: 'none',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-            title="Open NCERT Google Drive Folder"
-          >
-            <FolderOpen size={14} />
-            <span>Drive Folder ↗</span>
-          </a>
+          {!isClass1to8 && (
+            <a
+              href={SHARED_NCERT_DRIVE_FOLDER_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                background: 'rgba(245, 158, 11, 0.12)',
+                border: '1px solid rgba(245, 158, 11, 0.35)',
+                color: '#d97706',
+                padding: '6px 12px',
+                borderRadius: '8px',
+                fontSize: '0.78rem',
+                fontWeight: 700,
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+              title="Open NCERT Google Drive Folder"
+            >
+              <FolderOpen size={14} />
+              <span>Drive Folder ↗</span>
+            </a>
+          )}
         </div>
       </div>
 
@@ -256,63 +282,65 @@ export const PdfReaderView: React.FC<PdfReaderViewProps> = ({
           padding: '6px 14px',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: isClass1to8 ? 'flex-end' : 'space-between',
           fontSize: '0.78rem',
           flexWrap: 'wrap',
           gap: '8px',
           zIndex: 255
         }}>
-          {/* Engine Selector */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-            <span style={{ color: 'var(--text-muted)', fontWeight: 700, fontSize: '0.72rem' }}>Viewer:</span>
-            <div style={{ display: 'inline-flex', background: 'var(--bg-primary)', borderRadius: '8px', padding: '2px', border: '1px solid var(--border-color)' }}>
-              <button
-                onClick={() => setViewerEngine('DOCS')}
-                style={{
-                  background: viewerEngine === 'DOCS' ? 'var(--accent-primary, #4f46e5)' : 'transparent',
-                  color: viewerEngine === 'DOCS' ? '#ffffff' : 'var(--text-muted)',
-                  border: 'none',
-                  borderRadius: '6px',
-                  padding: '3px 8px',
-                  fontSize: '0.72rem',
-                  fontWeight: 800,
-                  cursor: 'pointer'
-                }}
-              >
-                Google Docs
-              </button>
-              <button
-                onClick={() => setViewerEngine('DIRECT')}
-                style={{
-                  background: viewerEngine === 'DIRECT' ? 'var(--accent-primary, #4f46e5)' : 'transparent',
-                  color: viewerEngine === 'DIRECT' ? '#ffffff' : 'var(--text-muted)',
-                  border: 'none',
-                  borderRadius: '6px',
-                  padding: '3px 8px',
-                  fontSize: '0.72rem',
-                  fontWeight: 800,
-                  cursor: 'pointer'
-                }}
-              >
-                Direct Stream
-              </button>
-              <button
-                onClick={() => setViewerEngine('DRIVE')}
-                style={{
-                  background: viewerEngine === 'DRIVE' ? 'var(--accent-primary, #4f46e5)' : 'transparent',
-                  color: viewerEngine === 'DRIVE' ? '#ffffff' : 'var(--text-muted)',
-                  border: 'none',
-                  borderRadius: '6px',
-                  padding: '3px 8px',
-                  fontSize: '0.72rem',
-                  fontWeight: 800,
-                  cursor: 'pointer'
-                }}
-              >
-                Drive Hub
-              </button>
+          {/* Engine Selector - completely hidden for primary/middle classes */}
+          {!isClass1to8 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <span style={{ color: 'var(--text-muted)', fontWeight: 700, fontSize: '0.72rem' }}>Viewer:</span>
+              <div style={{ display: 'inline-flex', background: 'var(--bg-primary)', borderRadius: '8px', padding: '2px', border: '1px solid var(--border-color)' }}>
+                <button
+                  onClick={() => setViewerEngine('DIRECT')}
+                  style={{
+                    background: viewerEngine === 'DIRECT' ? 'var(--accent-primary, #4f46e5)' : 'transparent',
+                    color: viewerEngine === 'DIRECT' ? '#ffffff' : 'var(--text-muted)',
+                    border: 'none',
+                    borderRadius: '6px',
+                    padding: '3px 8px',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Direct Stream
+                </button>
+                <button
+                  onClick={() => setViewerEngine('DRIVE')}
+                  style={{
+                    background: viewerEngine === 'DRIVE' ? 'var(--accent-primary, #4f46e5)' : 'transparent',
+                    color: viewerEngine === 'DRIVE' ? '#ffffff' : 'var(--text-muted)',
+                    border: 'none',
+                    borderRadius: '6px',
+                    padding: '3px 8px',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Drive Hub
+                </button>
+                <button
+                  onClick={() => setViewerEngine('DOCS')}
+                  style={{
+                    background: viewerEngine === 'DOCS' ? 'var(--accent-primary, #4f46e5)' : 'transparent',
+                    color: viewerEngine === 'DOCS' ? '#ffffff' : 'var(--text-muted)',
+                    border: 'none',
+                    borderRadius: '6px',
+                    padding: '3px 8px',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Google Docs
+                </button>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Instant 1-Click Open & Download Actions */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

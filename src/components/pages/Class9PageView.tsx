@@ -154,8 +154,44 @@ export const Class9PageView: React.FC<Class9PageViewProps> = ({
         </div>
       </div>
 
-      {/* Hero Showcase Card */}
-      <div style={{
+      {/* Compact Mobile Bar (Visible only on mobile screen <= 768px) */}
+      <div className="hub-hero-mobile-compact" style={{
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.12) 0%, rgba(139, 92, 246, 0.08) 100%)',
+        border: '1px solid rgba(99, 102, 241, 0.25)',
+        borderRadius: '14px',
+        padding: '10px 14px',
+        marginBottom: '14px',
+        gap: '10px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{
+            width: '32px',
+            height: '32px',
+            borderRadius: '8px',
+            background: 'rgba(99, 102, 241, 0.2)',
+            color: '#6366f1',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0
+          }}>
+            <GraduationCap size={18} />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.94rem', fontWeight: 900, color: 'var(--text-primary)', lineHeight: 1.2 }}>
+              Class 9 Textbooks &amp; Solutions
+            </div>
+            <div style={{ fontSize: '0.68rem', fontWeight: 800, color: '#6366f1' }}>
+              NEP 2026-27 • Complete Curriculum &amp; Studios
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Hero Showcase Card (Desktop only > 768px) */}
+      <div className="hub-hero-desktop" style={{
         background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.08) 0%, rgba(139, 92, 246, 0.05) 50%, rgba(6, 182, 212, 0.05) 100%)',
         border: '1px solid rgba(99, 102, 241, 0.2)',
         borderRadius: '24px',
@@ -433,17 +469,32 @@ export const Class9PageView: React.FC<Class9PageViewProps> = ({
                   borderBottom: '1px solid var(--border-color)'
                 }}>
                   {/* Book Cover Thumbnail */}
-                  <div style={{
-                    width: '78px',
-                    height: '108px',
-                    flexShrink: 0,
-                    borderRadius: '10px',
-                    overflow: 'hidden',
-                    boxShadow: '0 8px 18px rgba(0, 0, 0, 0.25)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    background: '#18181b',
-                    position: 'relative'
-                  }}>
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectSubject(subj, slug);
+                    }}
+                    title={`Open ${subj.name}`}
+                    style={{
+                      width: '78px',
+                      height: '108px',
+                      flexShrink: 0,
+                      borderRadius: '10px',
+                      overflow: 'hidden',
+                      boxShadow: '0 8px 18px rgba(0, 0, 0, 0.25)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      background: '#18181b',
+                      position: 'relative',
+                      cursor: 'pointer',
+                      transition: 'transform 0.15s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.05)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  >
                     <img
                       src={coverUrl}
                       alt={subj.name}

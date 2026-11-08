@@ -12,6 +12,7 @@
     "deploy:all": "node scripts/deploy_all.mjs",
     "deploy:quick": "npm run build && npx firebase-tools deploy --only hosting --project nextsem-ncert-2403 --non-interactive",
     "sync:cap": "npx cap sync android",
+    "sync:drive": "node scripts/sync_drive_books.cjs",
     "watch:deploy": "node scripts/watch_and_sync.cjs",
     "watch:pdf": "node scripts/watch_and_update_marked_pdfs.cjs --watch",
     "update:pdf": "node scripts/watch_and_update_marked_pdfs.cjs --sync",

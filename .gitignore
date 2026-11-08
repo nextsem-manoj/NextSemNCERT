@@ -43,3 +43,9 @@ public/pdf/Class 12/Pradeeep Physics-12th/
 *.zip
 
 public/pdf/
+
+android/app/build/
+android/.gradle/
+*.aab
+*.apk
+*.jks
